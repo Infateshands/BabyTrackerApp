@@ -1,12 +1,17 @@
-import { StatusBar } from 'expo-status-bar';
 
-import { StyleSheet, Text, View, Alert, ScrollView, TouchableOpacity, Touchable} from 'react-native';
+import { StyleSheet, Text, View, Alert, Image, TouchableOpacity, Touchable} from 'react-native';
 import React, { useEffect, useState } from 'react';
-// import {Picker} from '@react-native-picker/picker';
 import * as SQLite from 'expo-sqlite';
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+
 import * as ImagePicker from 'expo-image-picker';
 
+
+
+import BottleView from '../components/BottleView';
+import BreastView from '../components/breastview';
+import SolidsView from '../components/SolidsView';
+
+// database
 const db = SQLite.openDatabase('test.db');
 
 
@@ -28,13 +33,8 @@ export default function Feed({route, navigation}) {
 	const [milkType, setMilkType] = useState(undefined);
 	const [breastSide, setBreastSide] = useState(undefined);
 
+
 	
-
-
-	// for time
-
-	const [selectedHours, setSelectedHours] = useState(0);
-	const [selectedMinutes, setSelectedMinutes] = useState(0);
 
 	useEffect(()=>{
 		var hours = new Date().getHours(); //Current Hours
@@ -88,45 +88,19 @@ export default function Feed({route, navigation}) {
 	const view = () => {
 		if (viewType == 'Bottle'){
 			return (
-				<View style={{flex: 1, padding: '5%'}}>
-					<View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-						<View style={{elevation: 2,height: '50%', width: '50%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#B6D5F3', borderRadius: 5, padding: '1%'}}>
-							<Text>Tue July 100th</Text>
-						</View>
-					</View>
-					<View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-						<View style={{elevation: 2, height: '50%', width: '50%', justifyContent: 'center',backgroundColor: '#B6D5F3', borderRadius: 5,padding: '1%'}}>
-							<Text>Forumla</Text>
-						</View>
-						<View style={{elevation: 2, height: '50%', width: '30%', alignItems: 'flex-end', justifyContent: 'center', backgroundColor: '#B6D5F3', borderRadius: 5,padding: '1%'}}>
-							<Text>0mls</Text>
-						</View>
-					</View>
-					<GestureHandlerRootView style={{flex: 5, elevation: 2, backgroundColor: '#B6D5F3', borderRadius: 5, padding: '1%'}}>
-						<TouchableOpacity style ={{width: '60%', borderWidth: 1}}/>
-						
-					
-					</GestureHandlerRootView>					
-					
-					
 
-				</View>
-					
-						
+				<BottleView />
 
-				
+
 			)
 		}else if (viewType == 'Breast'){
 			return (
-				<View style={styles.internal}>
-					<Text style={{alignSelf: 'center'}}>Breast content goes here</Text>
-				</View>
+				<BreastView />
+				
 			)
 		}else if(viewType == 'Solids'){
 			return (
-				<View style={styles.internal}>
-					<Text style={{alignSelf: 'center'}}>Solids content goes here</Text>
-				</View>
+				<SolidsView />
 			)
 		}
 	}
@@ -190,6 +164,9 @@ export default function Feed({route, navigation}) {
 
 
 const styles = StyleSheet.create({
+	pickerContainer: {
+		width: '100%'
+	},
   container: {
 	flexGrow: 1,
     backgroundColor: '#EEF6F7',

@@ -9,6 +9,8 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@gregfrench/react-native-wheel-picker": "^1.2.18",
+    "@react-native-picker/picker": "^2.4.10",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.13",
     "@react-navigation/stack": "^6.3.17",
@@ -18,11 +20,16 @@
     "react": "18.2.0",
     "react-native": "0.71.8",
     "react-native-gesture-handler": "~2.9.0",
-    "react-native-reanimated": "~2.14.4",
+
     "react-native-screens": "^3.22.0",
+    "react-native-segmented-picker": "^2.0.2",
     "react-native-smooth-picker": "^1.1.5",
+
+    "react-native-value-picker": "^0.1.4",
+    "react-native-wheel-scroll-picker": "^0.2.4",
     "react-native-wheel-scrollview-picker": "^2.0.1",
-    "expo-image-picker": "~14.1.1"
+    "rmc-picker": "^5.0.10",
+    "rmc-picker-scroll": "^5.0.10"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
