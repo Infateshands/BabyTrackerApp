@@ -28,11 +28,11 @@ export default function BreastView({amount, milkType}) {
 
 
 
-	},)
+	},[])
 
     return (
         <View style={{flex: 1, padding: '5%'}}>
-					<View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+					{/* <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
 						<View style={{elevation: 2,height: '50%', width: '50%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#B6D5F3', borderRadius: 5, padding: '1%'}}>
 							<Text>Tue July 100th</Text>
 						</View>
@@ -61,7 +61,7 @@ export default function BreastView({amount, milkType}) {
 							selectedColor="#B6D5F3"
 							/>
 						</View>
-					</View>		
+					</View>		 */}
             </View>			
 					
     );
