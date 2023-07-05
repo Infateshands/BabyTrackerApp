@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Button, TextInput, Alert, ScrollView, Touchable
 import React, { useEffect, useState } from 'react';
 import * as SQLite from 'expo-sqlite';
 import Header from '../components/header';
+import ProfileImage from '../components/profileimage';
 
 const db = SQLite.openDatabase('test.db');
 
@@ -119,10 +120,11 @@ export default function Main({navigation}) {
 				{/* NAME AND PHOTO START */}
 				<View style={styles.nameSection}>
 					<View>
-						<Image
+						{/* <Image
 						source={require('../assets/baby.jpg')}
 						style={{width: 120, height: 120, borderRadius: 60, margin: 10}}
-						/>
+						/> */}
+            <ProfileImage />
 					</View>
 					<View style={{alignItems: 'flex-end', marginTop: -20}}> 
 						<Text style={{fontSize:24, margin: 2}}>Dallas-James</Text>

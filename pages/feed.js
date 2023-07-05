@@ -3,6 +3,9 @@ import { StyleSheet, Text, View, Alert, Image, TouchableOpacity, Touchable} from
 import React, { useEffect, useState } from 'react';
 import * as SQLite from 'expo-sqlite';
 
+import * as ImagePicker from 'expo-image-picker';
+
+
 
 import BottleView from '../components/BottleView';
 import BreastView from '../components/breastview';
@@ -85,7 +88,9 @@ export default function Feed({route, navigation}) {
 	const view = () => {
 		if (viewType == 'Bottle'){
 			return (
+
 				<BottleView />
+
 
 			)
 		}else if (viewType == 'Breast'){
