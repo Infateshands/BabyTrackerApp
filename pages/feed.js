@@ -4,7 +4,8 @@ import { StyleSheet, Text, View, Alert, ScrollView, TouchableOpacity, Touchable}
 import React, { useEffect, useState } from 'react';
 // import {Picker} from '@react-native-picker/picker';
 import * as SQLite from 'expo-sqlite';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import * as ImagePicker from 'expo-image-picker';
 
 const db = SQLite.openDatabase('test.db');
 
@@ -101,11 +102,11 @@ export default function Feed({route, navigation}) {
 							<Text>0mls</Text>
 						</View>
 					</View>
-					<View style={{flex: 5, elevation: 2, backgroundColor: '#B6D5F3', borderRadius: 5, padding: '1%'}}>
+					<GestureHandlerRootView style={{flex: 5, elevation: 2, backgroundColor: '#B6D5F3', borderRadius: 5, padding: '1%'}}>
 						<TouchableOpacity style ={{width: '60%', borderWidth: 1}}/>
 						
 					
-					</View>					
+					</GestureHandlerRootView>					
 					
 					
 
