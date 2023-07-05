@@ -1,20 +1,37 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import * as React from 'react';
 
-export default function App() {
+
+// pages
+import Feed from './pages/feed';
+import Main from './pages/main';
+import Sleep from './pages/sleep';
+import Nappy from './pages/nappy';
+
+
+const Stack = createNativeStackNavigator();
+
+function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+    <NavigationContainer>
+      <Stack.Navigator 
+        initialRouteName='Main'
+        screenOptions={{
+          headerShown: false
+        }}
+      >
+        <Stack.Screen name="Main" component={Main}/>
+        <Stack.Screen name="Feed" component={Feed}/>
+        <Stack.Screen name="Sleep" component={Sleep}/>
+        <Stack.Screen name="Nappy" component={Nappy}/>
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
+        
+        
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+export default App;
