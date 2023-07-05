@@ -1,10 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 
-import { StyleSheet, Text, View, TextInput, Alert, ScrollView, TouchableOpacity, Touchable} from 'react-native';
+import { StyleSheet, Text, View, Alert, ScrollView, TouchableOpacity, Touchable} from 'react-native';
 import React, { useEffect, useState } from 'react';
 // import {Picker} from '@react-native-picker/picker';
 import * as SQLite from 'expo-sqlite';
-import Header from '../components/header';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const db = SQLite.openDatabase('test.db');
 
@@ -87,9 +87,33 @@ export default function Feed({route, navigation}) {
 	const view = () => {
 		if (viewType == 'Bottle'){
 			return (
-				<View style={styles.internal}>
-					<Text style={{alignSelf: 'center'}}>Bottle content goes here</Text>
+				<View style={{flex: 1, padding: '5%'}}>
+					<View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+						<View style={{elevation: 2,height: '50%', width: '50%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#B6D5F3', borderRadius: 5, padding: '1%'}}>
+							<Text>Tue July 100th</Text>
+						</View>
+					</View>
+					<View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+						<View style={{elevation: 2, height: '50%', width: '50%', justifyContent: 'center',backgroundColor: '#B6D5F3', borderRadius: 5,padding: '1%'}}>
+							<Text>Forumla</Text>
+						</View>
+						<View style={{elevation: 2, height: '50%', width: '30%', alignItems: 'flex-end', justifyContent: 'center', backgroundColor: '#B6D5F3', borderRadius: 5,padding: '1%'}}>
+							<Text>0mls</Text>
+						</View>
+					</View>
+					<View style={{flex: 5, elevation: 2, backgroundColor: '#B6D5F3', borderRadius: 5, padding: '1%'}}>
+						<TouchableOpacity style ={{width: '60%', borderWidth: 1}}/>
+						
+					
+					</View>					
+					
+					
+
 				</View>
+					
+						
+
+				
 			)
 		}else if (viewType == 'Breast'){
 			return (
@@ -166,7 +190,7 @@ export default function Feed({route, navigation}) {
 
 const styles = StyleSheet.create({
   container: {
-	flex: 1,
+	flexGrow: 1,
     backgroundColor: '#EEF6F7',
   },
   header: {
@@ -208,7 +232,7 @@ const styles = StyleSheet.create({
 	
   },
   mainBox: {
-	height: '100%',
+	flex: 1,
 	backgroundColor: '#CFECEF',
 	elevation: 5,
 	borderRadius: 10,
@@ -231,6 +255,24 @@ const styles = StyleSheet.create({
 	justifyContent: 'center',
 	alignItems: 'center',
 	backgroundColor: '#b6d5f3'
+  },
+  // BOTTOM END
+
+  // BOTTLE VIEW START
+ 
+  bottleSroll: {
+	// margin: '5%',
+	flexGrow: 1,
+	backgroundColor: 'white',
+	alignItems: 'center',
+	justifyContent: 'center'
+  },
+  mls: {
+	flex: 1,
+	borderBottomWidth: 1,
+	borderTopWidth: 1,
+	// fontSize: 20,
+	backgroundColor: 'red'
   }
   
 });
