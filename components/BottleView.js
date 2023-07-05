@@ -6,24 +6,29 @@ import * as SQLite from 'expo-sqlite';
 import {ScrollPicker} from 'react-native-value-picker';
 import { bottleData } from '../src/data';
 
-export default function BottleView({childToParent}) {
+export default function BottleView({amount, milkType}) {
 	// for time
 	const [selectedHours, setSelectedHours] = useState(0);
 	const [selectedMinutes, setSelectedMinutes] = useState(0);
 	// for milk amount
-    const [pickedValue, setPickedValue] = useState(undefined);
+    const [pickedValue, setPickedValue] = useState(0);
 	const [data, setData] = useState();
+	const [mls, setMls] = useState();
+	// const [type, setType] = useState();
 	
 	useEffect(()=>{
-		setData(pickedValue);
-		console.log('hello');
+		setMls(pickedValue);
+		console.log(pickedValue);
+		amount(mls);
+		milkType('Formula')
 		
-		//// PASSING VARIABLES FROM CHILD COMPONENT (THIS) TO PARENT (FEED.JS)
-		//// TRYING TO PASS AMOUNT WHEN SELECTING MLS OF SCROLL PICKER
-		//// NOT LOGGING IT, NOT LOGGING ANYTHING
-		//// MIGHT BE BECAUSE THIS IS A COMPONENT
+		
 
-	})
+
+
+
+
+	},)
 
     return (
         <View style={{flex: 1, padding: '5%'}}>
@@ -43,9 +48,9 @@ export default function BottleView({childToParent}) {
 					<View style={{flex: 5, elevation: 2, backgroundColor: '#B6D5F3', borderRadius: 5, padding: '1%', borderWidth: 1, alignItems: 'center', justifyContent: 'center'}}>
 						<Image
 						source={require('../assets/pickerBottle.png')}
-						style={{position: 'absolute', transform: [{scale: 0.8}]}}
+						style={{position: 'absolute', transform: [{scale: 0.75}]}}
 						/>
-						<View style={{width: '80%', height: '60%', alignItems: 'center', justifyContent: 'center', marginTop: '20%'}}>
+						<View style={{width: '48%', height: '60%', alignItems: 'center', justifyContent: 'center', marginTop: '20%'}}>
 							<ScrollPicker
 							currentValue={pickedValue}
 							extraData={pickedValue}

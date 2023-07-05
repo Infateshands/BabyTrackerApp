@@ -33,8 +33,6 @@ export default function Main({navigation}) {
       },[]);
 
 	
-     
-
       const showHistory = () => {
         
         const reverse = [...feeds].reverse();
@@ -120,10 +118,6 @@ export default function Main({navigation}) {
 				{/* NAME AND PHOTO START */}
 				<View style={styles.nameSection}>
 					<View>
-						{/* <Image
-						source={require('../assets/baby.jpg')}
-						style={{width: 120, height: 120, borderRadius: 60, margin: 10}}
-						/> */}
             <ProfileImage />
 					</View>
 					<View style={{alignItems: 'flex-end', marginTop: -20}}> 
@@ -196,9 +190,6 @@ export default function Main({navigation}) {
 					</ScrollView>
 
 				</View>
-				
-				
-				
 				{/* TIMELINE END */}
 
 

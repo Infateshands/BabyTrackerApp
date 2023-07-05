@@ -7,9 +7,9 @@ import * as ImagePicker from 'expo-image-picker';
 
 
 
-import BottleView from '../components/BottleView';
-import BreastView from '../components/breastview';
-import SolidsView from '../components/SolidsView';
+import BottleView from '../components/BottleView.js';
+import BreastView from '../components/BreastView.js';
+// import SolidsView from '../components/SolidsView.js';
 
 // database
 const db = SQLite.openDatabase('test.db');
@@ -30,10 +30,10 @@ export default function Feed({route, navigation}) {
 	const [hour, setHour] = useState(undefined);
 	const [mins, setMins] = useState(undefined);
 	const [type, setType] = useState(undefined);
-	const [milkType, setMilkType] = useState(undefined);
+	const [milkType, setMilkType] = useState('Formula');
 	const [breastSide, setBreastSide] = useState(undefined);
 
-
+	//
 	
 
 	useEffect(()=>{
@@ -64,6 +64,15 @@ export default function Feed({route, navigation}) {
 		setViewType('Solids');
 	}
 
+	// for recieving data from child
+	const [data, setData] = useState('');
+
+	const childAmount = (childData) => {
+		setAmount(childData);
+	}
+	const childMilkType = (childData) => {
+		setMilkType(childData);
+	}
 	
 
 	const addFeed = () => { 
@@ -73,14 +82,14 @@ export default function Feed({route, navigation}) {
 			db.transaction((tx)=>{
 				tx.executeSql('INSERT INTO feeds (time, amount, type, breastside, milktype) VALUES (?,?,?,?,?)', [time, amount, type, breastSide, milkType])
 			})
-			Alert.alert('feed added');
+			Alert.alert('Feed Added', amount + ' mls of ' + milkType);
 			navigation.replace('Main');
 		}
 		else{
 			db.transaction((tx)=>{
 				tx.executeSql('INSERT INTO feeds (time, amount, type, breastside, milktype) VALUES (?,?,?,?,?)', [userTime, amount, type, breastSide, milkType])
 			})
-			Alert.alert('feed added');
+			Alert.alert('Feed Added', {amount} + ' of ' + {milkType});
 			navigation.replace('Main');
 		}
 	}
@@ -88,20 +97,17 @@ export default function Feed({route, navigation}) {
 	const view = () => {
 		if (viewType == 'Bottle'){
 			return (
-
-				<BottleView />
-
-
+				<BottleView amount={childAmount} milkType={childMilkType}/>
 			)
 		}else if (viewType == 'Breast'){
 			return (
-				<BreastView />
-				
+				<BreastView amount={childAmount} milkType={childMilkType} />
+
 			)
 		}else if(viewType == 'Solids'){
 			return (
-				<SolidsView />
-			)
+				// <SolidsView />
+<></>			)
 		}
 	}
 	

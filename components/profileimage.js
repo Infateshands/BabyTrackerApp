@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import * as ImagePicker from 'expo-image-picker';
-import {ImageVi, View, Image} from 'react-native'
+import { View, Image} from 'react-native'
 import { Pressable } from "react-native";
 import ImageViewer from "./imageviewer";
 
