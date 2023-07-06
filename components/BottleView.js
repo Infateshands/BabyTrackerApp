@@ -6,6 +6,7 @@ import * as SQLite from 'expo-sqlite';
 // import {ScrollPicker} from 'react-native-value-picker';
 import ScrollPicker from 'react-native-wheel-scroll-picker';
 import { bottleData } from '../src/data';
+import { ColourScheme } from '../src/ColourScheme';
 
 export default function BottleView({amount, milkType}) {
 	// for time
@@ -31,15 +32,15 @@ export default function BottleView({amount, milkType}) {
     return (
         <View style={{flex: 1, padding: '5%'}}>
 					<View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-						<View style={{elevation: 2,height: '50%', width: '50%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#B6D5F3', borderRadius: 5, padding: '1%'}}>
+						<View style={{elevation: 2,height: '50%', width: '50%', alignItems: 'center', justifyContent: 'center', backgroundColor: ColourScheme.sixthColour, borderRadius: 5, padding: '1%'}}>
 							<Text>Tue July 100th</Text>
 						</View>
 					</View>
 					<View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-						<View style={{elevation: 2, height: '50%', width: '50%', justifyContent: 'center',backgroundColor: '#B6D5F3', borderRadius: 5,padding: '1%'}}>
+						<View style={{elevation: 2, height: '50%', width: '50%', justifyContent: 'center',backgroundColor: ColourScheme.sixthColour, borderRadius: 5,padding: '1%'}}>
 							<Text>Forumla</Text>
 						</View>
-						<View style={{elevation: 2, height: '50%', width: '30%', alignItems: 'flex-end', justifyContent: 'center', backgroundColor: '#B6D5F3', borderRadius: 5,padding: '1%'}}>
+						<View style={{elevation: 2, height: '50%', width: '30%', alignItems: 'flex-end', justifyContent: 'center', backgroundColor: ColourScheme.sixthColour, borderRadius: 5,padding: '1%'}}>
 							<TextInput
 							placeholder={pickedValue +'mls'}
 							placeholderTextColor={'black'}
@@ -47,7 +48,7 @@ export default function BottleView({amount, milkType}) {
 							/>
 						</View>
 					</View>
-					<View style={{flex: 5, elevation: 2, backgroundColor: '#B6D5F3', borderRadius: 5, padding: '1%', borderWidth: 1, alignItems: 'center', justifyContent: 'center'}}>
+					<View style={{flex: 5, elevation: 2, backgroundColor: ColourScheme.sixthColour, borderRadius: 5, padding: '1%',  alignItems: 'center', justifyContent: 'center'}}>
 						<Image
 						source={require('../assets/pickerBottle.png')}
 						style={{position: 'absolute', transform: [{scale: 0.75}]}}

@@ -8,6 +8,7 @@ import Feed from './pages/feed';
 import Main from './pages/main';
 import Sleep from './pages/sleep';
 import Nappy from './pages/nappy';
+import AddChild from './pages/addChild';
 
 
 const Stack = createNativeStackNavigator();
@@ -25,6 +26,7 @@ function App() {
         <Stack.Screen name="Feed" component={Feed}/>
         <Stack.Screen name="Sleep" component={Sleep}/>
         <Stack.Screen name="Nappy" component={Nappy}/>
+        <Stack.Screen name="AddChild" component={AddChild}/>
 
 
         

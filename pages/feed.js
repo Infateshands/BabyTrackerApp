@@ -3,16 +3,17 @@ import { StyleSheet, Text, View, Alert, Image, TouchableOpacity, Touchable} from
 import React, { useEffect, useState } from 'react';
 import * as SQLite from 'expo-sqlite';
 
-import * as ImagePicker from 'expo-image-picker';
+import { ColourScheme } from '../src/ColourScheme.js';
 
 
 
 import BottleView from '../components/BottleView.js';
 import BreastView from '../components/BreastView.js';
-// import SolidsView from '../components/SolidsView.js';
+import SolidsView from '../components/SolidsView.js';
+import Header from '../components/header.js';
 
 // database
-const db = SQLite.openDatabase('test.db');
+const db = SQLite.openDatabase('db.db');
 
 
 
@@ -106,36 +107,35 @@ export default function Feed({route, navigation}) {
 			)
 		}else if(viewType == 'Solids'){
 			return (
-				// <SolidsView />
-<></>			)
+				<SolidsView />
+			)
 		}
 	}
 	
 	return (
 		<View style={styles.container}>
 			{/* HEADER START */}
-			<View style={styles.header}>
-				<Text style={{paddingBottom:10, fontSize: 22}}>Feeding</Text>
-			</View>
+			<Header title="Feeding"/>
+			
 			{/* HEADER END */}
 
 			{/* MENU START */}
 			<View style={styles.menuView}>
 				<View style={styles.menu}>
 					<TouchableOpacity 
-					style={[styles.menuButton, {backgroundColor: '#a1ffe8'}]}
+					style={[styles.menuButton, {backgroundColor: ColourScheme.secondColour}]}
 					onPress={handleBottle}
 					>
 						<Text>Bottle</Text>
 					</TouchableOpacity>
 					<TouchableOpacity 
-					style={[styles.menuButton, {backgroundColor: '#a1fcff'}]}
+					style={[styles.menuButton, {backgroundColor: ColourScheme.thirdColour}]}
 					onPress={handleBreast}
 					>
 						<Text>Breast</Text>
 					</TouchableOpacity>
 					<TouchableOpacity 
-					style={[styles.menuButton, {backgroundColor: '#a1c0ff'}]}
+					style={[styles.menuButton, {backgroundColor: ColourScheme.fourthColour}]}
 					onPress={handleSolids}
 					>
 						<Text>Solids</Text>
@@ -175,27 +175,20 @@ const styles = StyleSheet.create({
 	},
   container: {
 	flexGrow: 1,
-    backgroundColor: '#EEF6F7',
+    backgroundColor: ColourScheme.themeMode,
   },
-  header: {
-	flex: 0.5,
-	backgroundColor: '#CFECEF',
-	elevation: 5,
-	alignItems: 'center',
-	justifyContent: 'flex-end',
-  },
+  
 
   // MENU START
   menuView: {
 	flex: 1,
-	// backgroundColor: 'blue',
 	justifyContent: 'center'
   },
   menu: {
 	elevation: 10,
 	height: '80%',
 	flexDirection: 'row',
-	backgroundColor: '#CFECEF',
+	backgroundColor: ColourScheme.mainColour,
 	padding: 10
   },
   menuButton: {
@@ -217,7 +210,7 @@ const styles = StyleSheet.create({
   },
   mainBox: {
 	flex: 1,
-	backgroundColor: '#CFECEF',
+	backgroundColor: ColourScheme.mainColour,
 	elevation: 5,
 	borderRadius: 10,
 	justifyContent: 'center'
@@ -238,7 +231,7 @@ const styles = StyleSheet.create({
 	borderRadius: 10,
 	justifyContent: 'center',
 	alignItems: 'center',
-	backgroundColor: '#b6d5f3'
+	backgroundColor: ColourScheme.sixthColour,
   },
   // BOTTOM END
 

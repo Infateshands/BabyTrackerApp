@@ -1,36 +1,83 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, TextInput, Alert, ScrollView, TouchableOpacity, Image} from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, Alert, ScrollView, TouchableOpacity, Image, useColorScheme} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import * as SQLite from 'expo-sqlite';
 import Header from '../components/header';
 import ProfileImage from '../components/profileimage';
+import { Picker } from '@react-native-picker/picker';
+import { gender } from '../src/ColourScheme.js';
 
-const db = SQLite.openDatabase('test.db');
+// colours
+import {ColourScheme} from '../src/ColourScheme.js'
+
+
 
 export default function Main({navigation}) {
+	const db = SQLite.openDatabase('db.db');
+	
+  	function calcAge() {
+		var birthday = +new Date('2023-05-16');
+		var temp = ((Date.now() - birthday) / (31557600000))+.001;
+		return Math.floor(temp*52);
+	
+	}
+	
+	//// FOR THEME
+
+	
+
+
+	////
+
 
     const [feeds, setFeeds] = useState([]);
+	const [children, setChildren] = useState([]);
+	const [activeChildID, setActiveChildID] = useState();
+	const [gender, setGender] = useState();
+	const [activeChild, setActiveChild] = useState({})
+
+
 
     useEffect(() => {
         db.transaction((tx) => {
-            // UNCOMMENT AND SAVE TO DELETE TABLE
             // tx.executeSql('DROP TABLE feeds');
             tx.executeSql(
             'CREATE TABLE IF NOT EXISTS feeds (id INTEGER PRIMARY KEY AUTOINCREMENT, amount INT, time TEXT, type TEXT, breastside TEXT, milktype TEXT)');
-            console.log('table created')
+			console.log('feeds table created')
         });
-    
-        db.transaction(tx => {
-          tx.executeSql('SELECT * FROM feeds', null, 
-            (txObj, resultSet) => {
-              setFeeds(resultSet.rows._array);
-              console.log("imported feeds")
-            },
-            (txObj, error) => console.log(error)
-          );
-        });
-    
-      },[]);
+		db.transaction((tx) => {
+			tx.executeSql('SELECT * FROM feeds', null, 
+			  (txObj, resultSet) => {
+				setFeeds(resultSet.rows._array);
+				console.log("imported feeds")
+			  },
+			  (txObj, error) => console.log(error)
+			);
+		  });
+		// child database
+		db.transaction((tx) => {
+			// tx.executeSql('DROP TABLE children');
+			tx.executeSql(
+			'CREATE TABLE IF NOT EXISTS children (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, dob TEXT, height INTEGER, weight INTEGER, gender TEXT)');
+			console.log('children table created');
+				
+			
+		  });
+		db.transaction(tx => {
+			tx.executeSql('SELECT * FROM children', null,
+			(txObj, resultSet)=>{
+				setChildren(resultSet.rows._array);
+				console.log('children added to array')
+			},
+			(txObj, error)=> console.log(error)
+			);
+		})
+		
+		
+	},[]);
+		
+			
+	
 
 	
       const showHistory = () => {
@@ -40,8 +87,8 @@ export default function Main({navigation}) {
 
          if(feed.type == "Bottle"){
             return(
-                <TouchableOpacity style={styles.history} key={feed.id} onPress={()=>navigation.navigate('Feed', feed.id)}>
-                     <View style={[styles.type,{backgroundColor: '#a1ffe8'}]}>
+                <TouchableOpacity style={[styles.history, styles.shadow]} key={feed.id} onPress={()=>navigation.navigate('Feed', feed.id)}>
+                     <View style={[styles.type,{backgroundColor: ColourScheme.secondColour}]}>
                         <Image 
                         style={styles.typeImage}
                         source={require('../assets/bottle.png')} 
@@ -63,7 +110,7 @@ export default function Main({navigation}) {
          }else if(feed.type == "Breast"){
             return(
                 <TouchableOpacity style={styles.history} key={feed.id} >
-                    <View style={[styles.type,{backgroundColor: '#a1fcff'}]}>
+                    <View style={[styles.type,{backgroundColor: ColourScheme.thirdColour}]}>
                         <Image 
                          style={styles.typeImage}
                         source={require('../assets/breast.png')} 
@@ -85,7 +132,7 @@ export default function Main({navigation}) {
          }else if(feed.type == "Solids"){
             return(
                 <TouchableOpacity style={styles.history} key={feed.id} >
-                    <View style={[styles.type,{backgroundColor: '#a1c0ff'}]}>
+                    <View style={[styles.type,{backgroundColor: ColourScheme.fourthColour}]}>
                         <Image 
                          style={styles.typeImage}
                         source={require('../assets/solids.png')} 
@@ -106,13 +153,36 @@ export default function Main({navigation}) {
               );
        }
 	})}
-  
+
+	
+
+
+
+
+
+  		const showActiveChild = () => {
+			return children.map(child=>{
+				if(child == activeChild){
+					return (
+						<View style={{alignItems: 'flex-end'}}>
+							<Text style={{fontSize:24, margin: 2, color: ColourScheme.text}}>{child.name}</Text>
+							<Text style={{margin: 2, color: ColourScheme.text}}>{child.dob}</Text>
+							<Text style={{margin: 2, color: ColourScheme.text}}>Height: {child.height}cm</Text>
+							<Text style={{margin: 2, color: ColourScheme.text}}>Weight: {child.weight}kg</Text> 
+						</View>
+					)
+
+				}
+				
+		})
+			
+		}
 
   	return (
 	
 		<View style={styles.outer}>
 
-			<Header />
+			<Header title = {calcAge() + '-Weeks Old'}/>
 			<View style={styles.container}> 
 
 				{/* NAME AND PHOTO START */}
@@ -120,11 +190,29 @@ export default function Main({navigation}) {
 					<View>
             <ProfileImage />
 					</View>
-					<View style={{alignItems: 'flex-end', marginTop: -20}}> 
-						<Text style={{fontSize:24, margin: 2}}>Dallas-James</Text>
-						<Text style={{margin: 2}}>16th May 2023</Text>
-						<Text style={{margin: 2}}>Height: 57cm</Text>
-						<Text style={{margin: 2}}>Weight: 6kg</Text>
+					<View style={{alignItems: 'flex-end'}}> 
+
+						{showActiveChild()}
+						
+						<View style ={{flexDirection: 'row'}}>
+							<Picker 
+							style={{width: '60%'}}
+							onValueChange={setActiveChild}
+							selectedValue={activeChild}
+							>         
+								{children.map(child=>{
+									return (
+										<Picker.Item label ={child.name} value={child}/>
+									)
+								})}
+							</Picker>
+							<TouchableOpacity onPress={()=>navigation.replace('AddChild')}>
+								<Text style={{fontSize: 30}}>+</Text>
+							</TouchableOpacity>
+							
+
+						</View>
+						
 						
 
 					</View>
@@ -136,9 +224,9 @@ export default function Main({navigation}) {
 				
 
 				{/* MENU START */}
-				<View style = {styles.menuArea}>
+				<View style = {[styles.menuArea, styles.shadow]}>
 					<View style={styles.menuItemColumn}>
-						<TouchableOpacity style={styles.menuItem} onPress={()=>navigation.navigate('Feed')}>
+						<TouchableOpacity style={[styles.menuItem, styles.shadow]} onPress={()=>navigation.navigate('Feed')}>
 						<Image
 						source={require('../assets/feed.png')}
 						style={styles.pageButtonImg}
@@ -149,7 +237,7 @@ export default function Main({navigation}) {
 						
 					</View>
 					<View style={styles.menuItemColumn}>
-						<TouchableOpacity style={[styles.menuItem, {backgroundColor: '#a1fcff'}]}>
+						<TouchableOpacity style={[styles.menuItem, {backgroundColor: ColourScheme.thirdColour}]}>
 						<Image
 						source={require('../assets/sleep.png')}
 						style={styles.pageButtonImg}
@@ -159,7 +247,7 @@ export default function Main({navigation}) {
 						
 					</View>
 					<View style={styles.menuItemColumn}>
-						<TouchableOpacity style={[styles.menuItem, {backgroundColor: '#a1c0ff'}]}>
+						<TouchableOpacity style={[styles.menuItem, {backgroundColor: ColourScheme.fourthColour}]}>
 						<Image
 						source={require('../assets/nappy.png')}
 						style={styles.pageButtonImg}
@@ -169,7 +257,7 @@ export default function Main({navigation}) {
 						
 					</View>
 					<View style={styles.menuItemColumn}>
-						<TouchableOpacity style={[styles.menuItem, {backgroundColor: '#b9a1ff'}]}>
+						<TouchableOpacity style={[styles.menuItem, {backgroundColor: ColourScheme.fifthColour}]}>
 						<Image
 						source={require('../assets/other.png')}
 						style={styles.pageButtonImg}
@@ -182,7 +270,7 @@ export default function Main({navigation}) {
 				{/* HEADER MENU */}
 
 				{/* TIMELINE START */}
-				<View style={styles.timelineContainer}>
+				<View style={[styles.timelineContainer, styles.shadow]}>
 					<ScrollView contentContainerStyle={StyleSheet.timelineScroll} showsVerticalScrollIndicator={false}>
 						<Text style={{padding: '2%'}}>Today</Text>
 						{showHistory()}
@@ -202,15 +290,24 @@ export default function Main({navigation}) {
 
 
 const styles = StyleSheet.create({
+  shadow: {
+    shadowColor: 'grey',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+    elevation: 8
+    
+  },
 	outer: {
 		// width: '100%',
 		// height: '100%'
 	},
   container: {
-    backgroundColor: '#EEF6F7',
+    backgroundColor: ColourScheme.themeMode,
     alignItems: 'center',
-	height: '100%',
-	width: '100%',
+    height: '100%',
+    width: '100%',
+    
   },
   
   header: {
@@ -222,15 +319,16 @@ const styles = StyleSheet.create({
   menuArea: {
 	width: '100%',
 	height: '12%',
-	backgroundColor: '#CFECEF',
+	backgroundColor: ColourScheme.mainColour,
 	// borderRadius: 10,
 	flexDirection: 'row',
 	alignItems: 'center',
 	justifyContent: 'space-around',
 	padding: '2%',
-	elevation: 8,
-	// paddingLeft: '6%',
-	// paddingRight: '6%'
+	// elevation: 8,
+  // paddingLeft: '6%',
+  // paddingRight: '6%'
+ 
 
   },
   menuItemColumn: {
@@ -248,10 +346,10 @@ const styles = StyleSheet.create({
 	height: '80%',
 	width: '80%',
 	borderRadius: 5,
-	backgroundColor: '#a1ffe8',
+	backgroundColor: ColourScheme.secondColour,
 	elevation: 2,
 	alignItems: 'center',
-	justifyContent: 'center'
+	justifyContent: 'center',
   },
   menuItemText: {
 	textAlign: 'center',
@@ -267,21 +365,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     aspectRatio: 5,
     width: '95%',
-    backgroundColor: '#FCFFFE',
+    backgroundColor: ColourScheme.themeMode,
     alignItems: 'center',
     borderRadius: 5,
     margin: 5,
     elevation: 5,
-	  alignSelf: 'center'
+	  alignSelf: 'center',
+    
     
   },
   timelineContainer: {
 	width: '90%',
+  borderRadius: 5,
   
-	backgroundColor: '#CFECEF',
+	backgroundColor: ColourScheme.mainColour,
 	height: '42 %',
 	marginTop: '10%',
-	elevation: 10
+	elevation: 10,
+  
 	
 	
 
@@ -321,7 +422,8 @@ const styles = StyleSheet.create({
   detailsText: {
     height: 30,
     fontSize: 18,
-    fontWeight: '600'
+    fontWeight: '600',
+    color: ColourScheme.text
   },
   typeImage: {
     width: '80%',
@@ -346,12 +448,14 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    borderLeftWidth: 0.5
+    borderLeftWidth: 0.5,
+    borderColor: ColourScheme.themeModeBorder
     
   },
   milkType: {
     fontSize: 18,
     fontWeight: '400',
+    color: ColourScheme.text
     
     
   },

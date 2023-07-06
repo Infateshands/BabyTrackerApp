@@ -7,9 +7,9 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/baby-logo.jpg",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "image": "./assets/splash-screen.jpg",
+      "resizeMode": "cover",
+      "backgroundColor": "white"
     },
     "assetBundlePatterns": [
       "**/*"
