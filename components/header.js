@@ -47,7 +47,7 @@ export default function Header({title, active}){
 			return(
 				<View>
 					<TouchableOpacity onPress={()=>handleChildPress(child.name)}>
-					<Text>{child.name}</Text>
+					<Text style={styles.childsName}>{child.name}</Text>
 					</TouchableOpacity>
 				</View>
 			)
@@ -57,24 +57,30 @@ export default function Header({title, active}){
 	
     return(
 		<View style={styles.header}>
-        <View style={styles.topBar}>
-        <Text style={{fontSize: 20}}>{title}</Text>
-        <Modal
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-        setModalVisible(!modalVisible);
-         }}>
-			<View style={{backgroundColor: 'white', height: 200, width: 100, alignSelf: 'flex-end'}}>
-				{displayChildren()}
+			<View style={styles.topBar}>
+				<View style={{alignSelf: 'center'}}>
+					<Text style={{fontSize: 20}}>{title}</Text>
+				</View>
+				
 
+				<Modal
+				transparent={true}
+				visible={modalVisible}
+				onRequestClose={() => {
+				setModalVisible(!modalVisible);
+				}}>
+					<View style={styles.modal}>
+						{displayChildren()}
+					</View>
+
+				</Modal>
+
+				<TouchableOpacity style= {styles.dotsMenu} onPress={()=>setModalVisible(true)}>
+				<Text style={styles.dots}>o</Text>
+				<Text style={styles.dots}>o</Text>
+				<Text style={styles.dots}>o</Text>
+				</TouchableOpacity>
 			</View>
-
-        </Modal>
-        <TouchableOpacity onPress={()=>setModalVisible(true)}>
-         <Text style={{marginLeft: 20}}>...</Text>
-        </TouchableOpacity>
-        </View>
     </View>
 
 	)
@@ -91,15 +97,13 @@ const styles = StyleSheet.create({
       // alignItems: 'center'
     },
     topBar: {
-      
       height: 70,
       paddingTop: 30,
       width: '100%',
       backgroundColor: ColourScheme.mainColour,
       alignItems: 'center',
       justifyContent: 'center',
-      flexDirection: 'row'
-      
+      flexDirection: 'row',
     },
     name: {
       fontSize: 24,
@@ -110,5 +114,30 @@ const styles = StyleSheet.create({
       position: 'absolute',
       top: '70%',
       left: "2%"
-    }
+    },
+	dotsMenu: {
+		position: 'absolute',
+		right: '2%',
+		top: '85%'
+	},
+	dots: {
+		color: 'black',
+		fontSize: 10,
+		fontWeight: 'bold',
+		height: 10
+	}, 
+	modal: {
+		position: 'absolute',
+		right: '1%',
+		backgroundColor: 'white',
+		width: '20%',
+		borderRadius: 5,
+		borderWidth:2,
+		elevation: 5
+	},
+	childsName: {
+		fontSize: 18,
+		marginLeft: '2%',
+		height: 30
+	}
 })

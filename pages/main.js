@@ -39,8 +39,7 @@ export default function Main({navigation}) {
 
     const [feeds, setFeeds] = useState([]);
 	const [children, setChildren] = useState([]);
-	const [activeChildID, setActiveChildID] = useState();
-	const [gender, setGender] = useState();
+	// const [gender, setGender] = useState();
 	const [activeChild, setActiveChild] = useState()
 
 
@@ -65,7 +64,7 @@ export default function Main({navigation}) {
 		db.transaction((tx) => {
 			// tx.executeSql('DROP TABLE children');
 			tx.executeSql(
-			'CREATE TABLE IF NOT EXISTS children (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, dob TEXT, height INTEGER, weight INTEGER, gender TEXT)');
+			'CREATE TABLE IF NOT EXISTS children (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, dobDay TEXT, dobMonth TEXT, dobYear TEXT, height INTEGER, weight INTEGER, gender TEXT)');
 			console.log('children table created');
 				
 			
@@ -173,7 +172,7 @@ export default function Main({navigation}) {
 					return (
 						<View style={{alignItems: 'flex-end'}}>
 							<Text style={{fontSize:24, margin: 2, color: ColourScheme.text}}>{child.name}</Text>
-							<Text style={{margin: 2, color: ColourScheme.text}}>{child.dob}</Text>
+							<Text style={{margin: 2, color: ColourScheme.text}}>{child.dobDay}/{child.dobMonth}/{child.dobYear}</Text>
 							<Text style={{margin: 2, color: ColourScheme.text}}>Height: {child.height}cm</Text>
 							<Text style={{margin: 2, color: ColourScheme.text}}>Weight: {child.weight}kg</Text> 
 						</View>
@@ -202,17 +201,6 @@ export default function Main({navigation}) {
 						{showActiveChild()}
 						
 						<View style ={{flexDirection: 'row'}}>
-							{/* <Picker 
-							style={{width: '60%'}}
-							onValueChange={setActiveChild}
-							selectedValue={activeChild}
-							>         
-								{children.map(child=>{
-									return (
-										<Picker.Item label ={child.name} value={child}/>
-									)
-								})}
-							</Picker> */}
 							<TouchableOpacity onPress={()=>navigation.replace('AddChild')}>
 								<Text style={{fontSize: 30}}>+</Text>
 							</TouchableOpacity>

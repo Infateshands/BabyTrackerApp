@@ -11,32 +11,31 @@ const db = SQLite.openDatabase('db.db');
 export default function AddChild({navigation}) {
 
 const [name, setName] = useState(undefined);
-const [dob, setDob] = useState(undefined);
+const [dob, setDob] = useState();
+const [day, setDay] = useState();
+const [month, setMonth] = useState();
+const [year, setYear] = useState();
 const [height, setHeight] = useState(undefined);
 const [weight, setWeight] = useState(undefined);
 const [gender, setGender] = useState(undefined);
 
 
-const [clicked, setClicked] = useState();
 
 
 const handleSave =()=>{
     db.transaction((tx) =>{
-        tx.executeSql('INSERT INTO children (name, dob, weight, height, gender) VALUES (?,?,?,?,?)', 
-        [name, dob, weight, height, gender]);
+        tx.executeSql('INSERT INTO children (name, dobDay, dobMonth, dobYear, weight, height, gender) VALUES (?,?,?,?,?,?,?)', 
+        [name, day, month, year, weight, height, gender]);
         console.log(name + ' saved to database');
-        setClicked('yes')
         
         
     })
     Alert.alert("Child Added!", name + " added!")
-    navigation.replace('Main');
+    navigation.navigate('Main');
     
 
 }
-useEffect(()=>{
-    console.log('hello')
-})
+
 
 
 
@@ -50,10 +49,34 @@ useEffect(()=>{
             onChangeText={setName}
             />
             <Text style={styles.label}>Date of Birth: </Text>
-            <TextInput 
-            style={styles.input}
-            onChangeText={setDob}
-            />
+            <View style={{flexDirection: 'row'}}>
+            <View>
+                <Text style={styles.label}>Day </Text>
+                <TextInput 
+                style={styles.inputDate}
+                keyboardType={'numeric'}
+                onChangeText={setDay}
+                />
+            </View>
+            <View>
+                <Text style={styles.label}>Month </Text>
+                <TextInput 
+                style={styles.inputDate}
+                keyboardType={'numeric'}
+                onChangeText={setMonth}
+                />
+            </View>
+            <View>
+                <Text style={styles.label}>Year </Text>
+                <TextInput 
+                style={styles.inputDate}
+                keyboardType={'numeric'}
+                onChangeText={setYear}
+                />
+            </View>
+            </View>
+            
+            
             <Text style={styles.label}>Weight: </Text>
             <TextInput 
             style={styles.input}
@@ -100,5 +123,12 @@ const styles = StyleSheet.create({
         height: '5%',
         borderRadius: 5,
         backgroundColor: ColourScheme.mainColour
+    },
+    inputDate: {
+        width: 50,
+        height: 50,
+        borderRadius: 5,
+        backgroundColor: ColourScheme.mainColour,
+        marginRight: 10
     },
 })
