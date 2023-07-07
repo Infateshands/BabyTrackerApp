@@ -22,8 +22,15 @@ export default function Main({navigation}) {
 	
 	}
 	
-	//// FOR THEME
+	//// 
+	///
 
+	const [kid, setKid] = useState();
+	const headerToMain = (data) =>{
+		setActiveChild(data)
+	}
+
+	///
 	
 
 
@@ -34,7 +41,7 @@ export default function Main({navigation}) {
 	const [children, setChildren] = useState([]);
 	const [activeChildID, setActiveChildID] = useState();
 	const [gender, setGender] = useState();
-	const [activeChild, setActiveChild] = useState({})
+	const [activeChild, setActiveChild] = useState()
 
 
 
@@ -162,7 +169,7 @@ export default function Main({navigation}) {
 
   		const showActiveChild = () => {
 			return children.map(child=>{
-				if(child == activeChild){
+				if(child.name == activeChild){
 					return (
 						<View style={{alignItems: 'flex-end'}}>
 							<Text style={{fontSize:24, margin: 2, color: ColourScheme.text}}>{child.name}</Text>
@@ -182,7 +189,7 @@ export default function Main({navigation}) {
 	
 		<View style={styles.outer}>
 
-			<Header title = {calcAge() + '-Weeks Old'}/>
+			<Header title = {calcAge() + '-Weeks Old'} active={headerToMain}/>
 			<View style={styles.container}> 
 
 				{/* NAME AND PHOTO START */}
@@ -195,7 +202,7 @@ export default function Main({navigation}) {
 						{showActiveChild()}
 						
 						<View style ={{flexDirection: 'row'}}>
-							<Picker 
+							{/* <Picker 
 							style={{width: '60%'}}
 							onValueChange={setActiveChild}
 							selectedValue={activeChild}
@@ -205,7 +212,7 @@ export default function Main({navigation}) {
 										<Picker.Item label ={child.name} value={child}/>
 									)
 								})}
-							</Picker>
+							</Picker> */}
 							<TouchableOpacity onPress={()=>navigation.replace('AddChild')}>
 								<Text style={{fontSize: 30}}>+</Text>
 							</TouchableOpacity>
