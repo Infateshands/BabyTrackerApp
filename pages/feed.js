@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Alert, Image, TouchableOpacity, Touchable} from
 import React, { useEffect, useState } from 'react';
 import * as SQLite from 'expo-sqlite';
 
-import { ColourScheme } from '../src/ColourScheme.js';
+import { ColourSchemeBoy } from '../src/ColourScheme.js';
 
 
 
@@ -129,19 +129,19 @@ export default function Feed({route, navigation}) {
 			<View style={styles.menuView}>
 				<View style={styles.menu}>
 					<TouchableOpacity 
-					style={[styles.menuButton, {backgroundColor: ColourScheme.secondColour}]}
+					style={[styles.menuButton, {backgroundColor: ColourSchemeBoy.secondColour}]}
 					onPress={handleBottle}
 					>
 						<Text>Bottle</Text>
 					</TouchableOpacity>
 					<TouchableOpacity 
-					style={[styles.menuButton, {backgroundColor: ColourScheme.thirdColour}]}
+					style={[styles.menuButton, {backgroundColor: ColourSchemeBoy.thirdColour}]}
 					onPress={handleBreast}
 					>
 						<Text>Breast</Text>
 					</TouchableOpacity>
 					<TouchableOpacity 
-					style={[styles.menuButton, {backgroundColor: ColourScheme.fourthColour}]}
+					style={[styles.menuButton, {backgroundColor: ColourSchemeBoy.fourthColour}]}
 					onPress={handleSolids}
 					>
 						<Text>Solids</Text>
@@ -181,7 +181,6 @@ const styles = StyleSheet.create({
 	},
   container: {
 	flexGrow: 1,
-    backgroundColor: ColourScheme.themeMode,
   },
   
 
@@ -194,7 +193,7 @@ const styles = StyleSheet.create({
 	elevation: 10,
 	height: '80%',
 	flexDirection: 'row',
-	backgroundColor: ColourScheme.mainColour,
+	backgroundColor: ColourSchemeBoy.mainColour,
 	padding: 10
   },
   menuButton: {
@@ -216,7 +215,7 @@ const styles = StyleSheet.create({
   },
   mainBox: {
 	flex: 1,
-	backgroundColor: ColourScheme.mainColour,
+	backgroundColor: ColourSchemeBoy.mainColour,
 	elevation: 5,
 	borderRadius: 10,
 	justifyContent: 'center'
@@ -237,7 +236,7 @@ const styles = StyleSheet.create({
 	borderRadius: 10,
 	justifyContent: 'center',
 	alignItems: 'center',
-	backgroundColor: ColourScheme.sixthColour,
+	backgroundColor: ColourSchemeBoy.sixthColour,
   },
   // BOTTOM END
 

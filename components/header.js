@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, Modal } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { ColourScheme } from '../src/ColourScheme';
+import { ColourSchemeBoy, ColourSchemeGirl } from '../src/ColourScheme';
 import * as SQLite from 'expo-sqlite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/core';
 
 
 const db = SQLite.openDatabase('db.db');
@@ -10,6 +11,9 @@ const db = SQLite.openDatabase('db.db');
 
 
 export default function Header({title, active}){
+	const [defaultStyle, setDefaultStyle] = useState();
+
+	const navigation = useNavigation();
 
 
 	/// local storage for saving last selected child
@@ -24,11 +28,28 @@ export default function Header({title, active}){
 	  const storeGender = async (value) => {
 		try {
 		  await AsyncStorage.setItem('activeChildGender', value,);
-		//   console.log('stored ' +value+ ' into local storage')
+		  
+		  console.log('stored ' +value+ ' into local storage')
 		} catch (e) {
 		  console.log(e);
 		}
 	  };
+	  // import gender
+	const getGender = async () => {
+		try {
+		  const value = await AsyncStorage.getItem('activeChildGender');
+		  if (value !== null) {
+			if(value == "Boy"){
+				setDefaultStyle(true)
+			}else{
+				setDefaultStyle(false)
+			}
+			console.log(value + ' read from local storage main')
+		  }
+		} catch (e) {
+		  console.log(e)
+		}
+	};
 	  const getData = async () => {
 		try {
 		  const value = await AsyncStorage.getItem('activeChildName');
@@ -59,6 +80,7 @@ export default function Header({title, active}){
 		})
 		getData()
 		active(activeChild)
+		getGender()
 		
 
 	
@@ -71,7 +93,14 @@ export default function Header({title, active}){
 		storeName(kid.name)
 		storeGender(kid.gender)
 		
+		
 	
+	}
+	const handleAddNewChild = () => {
+		setModalVisible(!modalVisible)
+
+		navigation.navigate('AddChild');
+
 	}
 
 	const displayChildren = () => {
@@ -90,7 +119,7 @@ export default function Header({title, active}){
 	
     return(
 		<View style={styles.header}>
-			<View style={styles.topBar}>
+			<View style={defaultStyle ? styles.topBar : styles.topBarGirl}>
 				<View style={{alignSelf: 'center'}}>
 					<Text style={{fontSize: 20}}>{title}</Text>
 				</View>
@@ -102,8 +131,11 @@ export default function Header({title, active}){
 				onRequestClose={() => {
 				setModalVisible(!modalVisible);
 				}}>
-					<View style={styles.modal}>
+					<View style={defaultStyle ? styles.modal : styles.modalGirl}>
 						{displayChildren()}
+						<TouchableOpacity onPress={handleAddNewChild}>
+							<Text style={[styles.childsName, {fontWeight: 'bold'}]}>Add Child</Text>
+						</TouchableOpacity>
 					</View>
 
 				</Modal>
@@ -137,11 +169,20 @@ const styles = StyleSheet.create({
       height: 70,
       paddingTop: 30,
       width: '100%',
-      backgroundColor: ColourScheme.mainColour,
+      backgroundColor: ColourSchemeBoy.mainColour,
       alignItems: 'center',
       justifyContent: 'center',
       flexDirection: 'row',
     },
+	topBarGirl: {
+		height: 70,
+		paddingTop: 30,
+		width: '100%',
+		backgroundColor: ColourSchemeGirl.mainColour,
+		alignItems: 'center',
+		justifyContent: 'center',
+		flexDirection: 'row',
+	  },
     name: {
       fontSize: 24,
     },
@@ -174,8 +215,17 @@ const styles = StyleSheet.create({
 	modal: {
 		position: 'absolute',
 		right: '1%',
-		backgroundColor: 'white',
-		width: '20%',
+		backgroundColor: ColourSchemeBoy.mainColour,
+		width: '30%',
+		borderRadius: 5,
+		borderWidth:2,
+		elevation: 5
+	},
+	modalGirl: {
+		position: 'absolute',
+		right: '1%',
+		backgroundColor: ColourSchemeGirl.mainColour,
+		width: '30%',
 		borderRadius: 5,
 		borderWidth:2,
 		elevation: 5

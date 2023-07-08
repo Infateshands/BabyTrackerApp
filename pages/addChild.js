@@ -2,7 +2,7 @@ import react from "react";
 import { useState, useEffect } from "react";
 import {View, TextInput, Text, StyleSheet, Button, Alert, TouchableOpacity} from "react-native"
 import * as SQLite from 'expo-sqlite';
-import { ColourScheme } from "../src/ColourScheme";
+import { ColourSchemeBoy } from "../src/ColourScheme";
 import { Picker } from "@react-native-picker/picker";
 import { SelectedItem } from "react-native-wheel-scroll-picker";
 
@@ -122,13 +122,13 @@ const styles = StyleSheet.create({
         width: '50%',
         height: '5%',
         borderRadius: 5,
-        backgroundColor: ColourScheme.mainColour
+        backgroundColor: ColourSchemeBoy.mainColour
     },
     inputDate: {
         width: 50,
         height: 50,
         borderRadius: 5,
-        backgroundColor: ColourScheme.mainColour,
+        backgroundColor: ColourSchemeBoy.mainColour,
         marginRight: 10
     },
 })

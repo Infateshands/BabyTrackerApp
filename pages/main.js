@@ -5,11 +5,12 @@ import * as SQLite from 'expo-sqlite';
 import Header from '../components/header';
 import ProfileImage from '../components/profileimage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {ColourScheme} from '../src/ColourScheme.js'
+import {ColourSchemeBoy, ColourSchemeGirl} from '../src/ColourScheme.js'
+
 
 
 export default function Main({navigation}) {
-
+	
 	// DATABASE
 	const db = SQLite.openDatabase('db.db');
 
@@ -17,7 +18,7 @@ export default function Main({navigation}) {
 	const [feeds, setFeeds] = useState([]); // 
 	const [children, setChildren] = useState([]);
 	const [activeChild, setActiveChild] = useState();
-
+	const [defaultStyle, setDefaultStyle] = useState();
 	// FUNCTIONS
 	// calculate age - update to calculate from childs DOB
   	function calcAge() {
@@ -40,6 +41,22 @@ export default function Main({navigation}) {
 		  }
 		} catch (e) {
 		  // error reading value
+		}
+	};
+	// import gender
+	const getGender = async () => {
+		try {
+		  const value = await AsyncStorage.getItem('activeChildGender');
+		  if (value !== null) {
+			if(value == "Boy"){
+				setDefaultStyle(true)
+			}else{
+				setDefaultStyle(false)
+			}
+			// console.log(value + ' read from local storage main')
+		  }
+		} catch (e) {
+		  console.log(e)
 		}
 	};
 	// run on star of app, and again whenever activeChild changes
@@ -77,11 +94,7 @@ export default function Main({navigation}) {
 			);
 		})
 		getName();
-		// getGender();
-		
-		
-		
-		
+		getGender();
 		
 	},[activeChild]);
 	// show childs history
@@ -93,7 +106,7 @@ export default function Main({navigation}) {
 			if(feed.type == "Bottle"){
 				return(
 					<TouchableOpacity key={index} style={[styles.history, styles.shadow]} onPress={()=>navigation.navigate('Feed', feed.id)}>
-							<View style={[styles.type,{backgroundColor: ColourScheme.secondColour}]}>
+							<View style={[styles.type,{backgroundColor: ColourSchemeBoy.secondColour}]}>
 							<Image 
 							style={styles.typeImage}
 							source={require('../assets/bottle.png')} 
@@ -115,7 +128,7 @@ export default function Main({navigation}) {
 				}else if(feed.type == "Breast"){
 				return(
 					<TouchableOpacity key = {index} style={styles.history}  >
-						<View style={[styles.type,{backgroundColor: ColourScheme.thirdColour}]}>
+						<View style={[styles.type,{backgroundColor: ColourSchemeBoy.thirdColour}]}>
 							<Image 
 								style={styles.typeImage}
 							source={require('../assets/breast.png')} 
@@ -137,7 +150,7 @@ export default function Main({navigation}) {
 				}else if(feed.type == "Solids"){
 				return(
 					<TouchableOpacity key ={index} style={styles.history}  >
-						<View style={[styles.type,{backgroundColor: ColourScheme.fourthColour}]}>
+						<View style={[styles.type,{backgroundColor: ColourSchemeBoy.fourthColour}]}>
 							<Image 
 								style={styles.typeImage}
 							source={require('../assets/solids.png')} 
@@ -160,20 +173,32 @@ export default function Main({navigation}) {
 	})};
 	// show active child details
 	const showActiveChild = () => {
-		return children.map((child, index)=>{
-			if(child.name == activeChild){
-				return (
-					<View key={index} style={{alignItems: 'flex-end'}}>
-						<Text style={{fontSize:24, margin: 2, color: ColourScheme.text}}>{child.name}</Text>
-						<Text style={{margin: 2, color: ColourScheme.text}}>{child.dobDay}/{child.dobMonth}/{child.dobYear}</Text>
-						<Text style={{margin: 2, color: ColourScheme.text}}>Height: {child.height}cm</Text>
-						<Text style={{margin: 2, color: ColourScheme.text}}>Weight: {child.weight}kg</Text> 
+		if(children.length == 0){ // if array is empty (no added children), display message
+			return ( 
+				<View style={{alignItems: 'center'}}>
+						<Text style={{fontSize:24, margin: 2, color: ColourSchemeBoy.text}}>
+							Add a child
+						</Text>
+						<Text style={{fontSize:24, margin: 2, color: ColourSchemeBoy.text}}>
+							to see details
+						</Text>
 					</View>
-				)
+			)
+		} else {
+			return children.map((child, index)=>{ // loop through array
+				if(child.name == activeChild){ // find active child in array
+					return ( // display active childs details
+						<View key={index} style={{alignItems: 'flex-end'}}>
+							<Text style={{fontSize:24, margin: 2, color: ColourSchemeBoy.text}}>{child.name}</Text>
+							<Text style={{margin: 2, color: ColourSchemeBoy.text}}>{child.dobDay}/{child.dobMonth}/{child.dobYear}</Text>
+							<Text style={{margin: 2, color: ColourSchemeBoy.text}}>Height: {child.height}cm</Text>
+							<Text style={{margin: 2, color: ColourSchemeBoy.text}}>Weight: {child.weight}kg</Text> 
+						</View>
+					)
+				}
+		})
 
-			}
-			
-	})
+		}
 		
 	};
 
@@ -196,9 +221,9 @@ export default function Main({navigation}) {
 						{showActiveChild()}
 						
 						<View style ={{flexDirection: 'row'}}>
-							<TouchableOpacity onPress={()=>navigation.replace('AddChild')}>
+							{/* <TouchableOpacity onPress={()=>navigation.replace('AddChild')}>
 								<Text style={{fontSize: 30}}>+</Text>
-							</TouchableOpacity>
+							</TouchableOpacity> */}
 							
 
 						</View>
@@ -214,7 +239,7 @@ export default function Main({navigation}) {
 				
 
 				{/* MENU START */}
-				<View style = {[styles.menuArea, styles.shadow]}>
+				<View style = {[defaultStyle ? styles.menuArea : styles.menuAreaGirl, styles.shadow]}>
 					<View style={styles.menuItemColumn}>
 						<TouchableOpacity style={[styles.menuItem, styles.shadow]} onPress={()=>navigation.navigate('Feed')}>
 						<Image
@@ -227,7 +252,7 @@ export default function Main({navigation}) {
 						
 					</View>
 					<View style={styles.menuItemColumn}>
-						<TouchableOpacity style={[styles.menuItem, {backgroundColor: ColourScheme.thirdColour}]}>
+						<TouchableOpacity style={[styles.menuItem, {backgroundColor: ColourSchemeBoy.thirdColour}]}>
 						<Image
 						source={require('../assets/sleep.png')}
 						style={styles.pageButtonImg}
@@ -237,7 +262,7 @@ export default function Main({navigation}) {
 						
 					</View>
 					<View style={styles.menuItemColumn}>
-						<TouchableOpacity style={[styles.menuItem, {backgroundColor: ColourScheme.fourthColour}]}>
+						<TouchableOpacity style={[styles.menuItem, {backgroundColor: ColourSchemeBoy.fourthColour}]}>
 						<Image
 						source={require('../assets/nappy.png')}
 						style={styles.pageButtonImg}
@@ -247,7 +272,7 @@ export default function Main({navigation}) {
 						
 					</View>
 					<View style={styles.menuItemColumn}>
-						<TouchableOpacity style={[styles.menuItem, {backgroundColor: ColourScheme.fifthColour}]}>
+						<TouchableOpacity style={[styles.menuItem, {backgroundColor: ColourSchemeBoy.fifthColour}]}>
 						<Image
 						source={require('../assets/other.png')}
 						style={styles.pageButtonImg}
@@ -260,7 +285,7 @@ export default function Main({navigation}) {
 				{/* HEADER MENU */}
 
 				{/* TIMELINE START */}
-				<View style={[styles.timelineContainer, styles.shadow]}>
+				<View style={[defaultStyle ? styles.timelineContainer : styles.timelineContainerGirl, styles.shadow]}>
 					<ScrollView contentContainerStyle={StyleSheet.timelineScroll} showsVerticalScrollIndicator={false}>
 						<Text style={{padding: '2%'}}>Today</Text>
 						{showHistory()}
@@ -278,7 +303,7 @@ export default function Main({navigation}) {
   );}
 
 
-
+//STYLES
 const styles = StyleSheet.create({
   shadow: {
     shadowColor: 'grey',
@@ -293,7 +318,7 @@ const styles = StyleSheet.create({
 		// height: '100%'
 	},
   container: {
-    backgroundColor: ColourScheme.themeMode,
+    // backgroundColor: ColourSchemeBoy.themeMode,
     alignItems: 'center',
     height: '100%',
     width: '100%',
@@ -309,7 +334,22 @@ const styles = StyleSheet.create({
   menuArea: {
 	width: '100%',
 	height: '12%',
-	backgroundColor: ColourScheme.mainColour,
+	backgroundColor: ColourSchemeBoy.mainColour,
+	// borderRadius: 10,
+	flexDirection: 'row',
+	alignItems: 'center',
+	justifyContent: 'space-around',
+	padding: '2%',
+	// elevation: 8,
+  // paddingLeft: '6%',
+  // paddingRight: '6%'
+ 
+
+  },
+  menuAreaGirl: {
+	width: '100%',
+	height: '12%',
+	backgroundColor: ColourSchemeGirl.mainColour,
 	// borderRadius: 10,
 	flexDirection: 'row',
 	alignItems: 'center',
@@ -336,7 +376,7 @@ const styles = StyleSheet.create({
 	height: '80%',
 	width: '80%',
 	borderRadius: 5,
-	backgroundColor: ColourScheme.secondColour,
+	backgroundColor: ColourSchemeBoy.secondColour,
 	elevation: 2,
 	alignItems: 'center',
 	justifyContent: 'center',
@@ -355,7 +395,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     aspectRatio: 5,
     width: '95%',
-    backgroundColor: ColourScheme.themeMode,
+    backgroundColor: 'white',
     alignItems: 'center',
     borderRadius: 5,
     margin: 5,
@@ -367,14 +407,18 @@ const styles = StyleSheet.create({
   timelineContainer: {
 	width: '90%',
   	borderRadius: 5,
-	backgroundColor: ColourScheme.mainColour,
+	backgroundColor: ColourSchemeBoy.mainColour,
 	height: '42 %',
 	marginTop: '10%',
 	elevation: 10,
-  
-	
-	
-
+  },
+  timelineContainerGirl: {
+	width: '90%',
+  	borderRadius: 5,
+	backgroundColor: ColourSchemeGirl.mainColour,
+	height: '42 %',
+	marginTop: '10%',
+	elevation: 10,
   },
   timelineScroll: {
 	width: '100%',
@@ -412,7 +456,7 @@ const styles = StyleSheet.create({
     height: 30,
     fontSize: 18,
     fontWeight: '600',
-    color: ColourScheme.text
+    color: ColourSchemeBoy.text
   },
   typeImage: {
     width: '80%',
@@ -437,14 +481,14 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    borderLeftWidth: 0.5,
-    borderColor: ColourScheme.themeModeBorder
+    borderLeftWidth: 1,
+    borderColor: 'black'
     
   },
   milkType: {
     fontSize: 18,
     fontWeight: '400',
-    color: ColourScheme.text
+    color: ColourSchemeBoy.text
     
     
   },
