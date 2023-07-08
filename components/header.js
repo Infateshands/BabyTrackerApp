@@ -150,7 +150,7 @@ export default function Header({title, active}){
 				</View>
 				
 			</View>
-    </View>
+    	</View>
 
 	)
     

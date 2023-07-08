@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image} from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Modal} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import * as SQLite from 'expo-sqlite';
 import Header from '../components/header';
@@ -19,6 +19,8 @@ export default function Main({navigation}) {
 	const [children, setChildren] = useState([]);
 	const [activeChild, setActiveChild] = useState();
 	const [defaultStyle, setDefaultStyle] = useState();
+	const [modalVisible, setModalVisible] = useState(false);
+
 	// FUNCTIONS
 	// calculate age - update to calculate from childs DOB
   	function calcAge() {
@@ -59,6 +61,23 @@ export default function Main({navigation}) {
 		  console.log(e)
 		}
 	};
+	const storeName = async (value) => {
+		try {
+		  await AsyncStorage.setItem('activeChildName', value,);
+		//   console.log('stored ' +value+ ' into local storage')
+		} catch (e) {
+		  console.log(e);
+		}
+	  };
+	  const storeGender = async (value) => {
+		try {
+		  await AsyncStorage.setItem('activeChildGender', value,);
+		  
+		  console.log('stored ' +value+ ' into local storage')
+		} catch (e) {
+		  console.log(e);
+		}
+	  };
 	// run on star of app, and again whenever activeChild changes
     useEffect(() => {
         db.transaction((tx) => {
@@ -201,14 +220,81 @@ export default function Main({navigation}) {
 		}
 		
 	};
+	// for menu
+	const handleAddNewChild = () => {
+		setModalVisible(!modalVisible)
+
+		navigation.navigate('AddChild');
+
+	}
+
+	const displayChildren = () => {
+		
+		return children.map((child, index)=>{
+			return(
+				<View key={index} >
+					<TouchableOpacity onPress={()=>handleChildPress(child)}>
+					<Text style={styles.childsName}>{child.name}</Text>
+					</TouchableOpacity>
+				</View>
+			)
+		})
+		
+	}
+	const handleChildPress = (kid) => {
+		setModalVisible(!modalVisible)
+		setActiveChild(kid)
+		storeName(kid.name)
+		storeGender(kid.gender)
+		
+		
+	
+	}
+	
 
 	/// make new saved child activeChild
 
   	return (
 	
 		<View style={styles.outer}>
+			{/* HEADER START */}
 
-			<Header title = {calcAge() + '-Weeks Old'} active={headerToMain}/>
+			<View style={styles.header}>
+			<View style={defaultStyle ? styles.topBar : styles.topBarGirl}>
+				<View style={{alignSelf: 'center'}}>
+					<Text style={{fontSize: 20}}>7 Weeks Old</Text>
+				</View>
+				
+
+				<Modal
+				transparent={true}
+				visible={modalVisible}
+				onRequestClose={() => {
+				setModalVisible(!modalVisible);
+				}}>
+					<View style={defaultStyle ? styles.modal : styles.modalGirl}>
+						{displayChildren()}
+						<TouchableOpacity onPress={handleAddNewChild}>
+							<Text style={[styles.childsName, {fontWeight: 'bold'}]}>Add Child</Text>
+						</TouchableOpacity>
+					</View>
+
+				</Modal>
+				<View style= {styles.dotsMenuView}>
+				<TouchableOpacity style={styles.dotsButton}  onPress={()=>setModalVisible(true)}>
+				<Image
+				source={require('../assets/dotMenu.png')}
+				style={styles.img}
+				/>
+				</TouchableOpacity>
+
+				</View>
+				
+			</View>
+    	</View>
+
+
+			{/* HEADER END */}
 			<View style={styles.container}> 
 
 				{/* NAME AND PHOTO START */}
@@ -511,6 +597,82 @@ const styles = StyleSheet.create({
 	width:"60%",
 	height: '60%',
 	
+  },
+
+  // HEADER
+
+  topBar: {
+	height: 70,
+	paddingTop: 30,
+	width: '100%',
+	backgroundColor: ColourSchemeBoy.mainColour,
+	alignItems: 'center',
+	justifyContent: 'center',
+	flexDirection: 'row',
+  },
+  topBarGirl: {
+	  height: 70,
+	  paddingTop: 30,
+	  width: '100%',
+	  backgroundColor: ColourSchemeGirl.mainColour,
+	  alignItems: 'center',
+	  justifyContent: 'center',
+	  flexDirection: 'row',
+	},
+  name: {
+	fontSize: 24,
+  },
+  img: {
+	  position: 'absolute',
+	  
+	  transform: [
+		  {scale: 0.8}
+	  ]
+  },
+  dotsMenuView: {
+	  position: 'absolute',
+	  right: 0,
+	  top: '70%',
+	  width: '10%',
+	  height: '100%',
+	  
+  },
+  dotsButton: {
+	  
+	  height: '100%'
+
+  },
+  dots: {
+	  color: 'black',
+	  fontSize: 10,
+	  fontWeight: 'bold',
+	  height: 10
+  }, 
+  modal: {
+	  position: 'absolute',
+	  right: '1%',
+	  backgroundColor: ColourSchemeBoy.mainColour,
+	  width: '30%',
+	  borderRadius: 5,
+	  borderWidth:2,
+	  elevation: 5
+  },
+  modalGirl: {
+	  position: 'absolute',
+	  right: '1%',
+	  backgroundColor: ColourSchemeGirl.mainColour,
+	  width: '30%',
+	  borderRadius: 5,
+	  borderWidth:2,
+	  elevation: 5
+  },
+  childsName: {
+	  fontSize: 18,
+	  marginLeft: '2%',
+	  height: 30
+  },
+  header: {
+	width: '100%'
   }
  
   
