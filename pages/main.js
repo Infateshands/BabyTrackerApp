@@ -1,61 +1,60 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, TextInput, Alert, ScrollView, TouchableOpacity, Image, useColorScheme} from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import * as SQLite from 'expo-sqlite';
 import Header from '../components/header';
 import ProfileImage from '../components/profileimage';
-import { Picker } from '@react-native-picker/picker';
-import { gender } from '../src/ColourScheme.js';
-
-// colours
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ColourScheme} from '../src/ColourScheme.js'
 
 
-
 export default function Main({navigation}) {
+
+	// DATABASE
 	const db = SQLite.openDatabase('db.db');
-	
+
+	// HOOKS
+	const [feeds, setFeeds] = useState([]); // 
+	const [children, setChildren] = useState([]);
+	const [activeChild, setActiveChild] = useState();
+
+	// FUNCTIONS
+	// calculate age - update to calculate from childs DOB
   	function calcAge() {
 		var birthday = +new Date('2023-05-16');
 		var temp = ((Date.now() - birthday) / (31557600000))+.001;
 		return Math.floor(temp*52);
 	
-	}
-	
-	//// 
-	///
-
-	const [kid, setKid] = useState();
+	};
+	// pass active child from header component (pick child menu/modal) to Main to use to display active child details
 	const headerToMain = (data) =>{
 		setActiveChild(data)
-	}
-
-	///
-	
-
-
-	////
-
-
-    const [feeds, setFeeds] = useState([]);
-	const [children, setChildren] = useState([]);
-	// const [gender, setGender] = useState();
-	const [activeChild, setActiveChild] = useState()
-
-
-
+	};
+	// import active childs when loading new app session, remembers active user from last session
+	const getName = async () => {
+		try {
+		  const value = await AsyncStorage.getItem('activeChildName');
+		  if (value !== null) {
+			setActiveChild(value);
+			// console.log(value + ' read from local storage main')
+		  }
+		} catch (e) {
+		  // error reading value
+		}
+	};
+	// run on star of app, and again whenever activeChild changes
     useEffect(() => {
         db.transaction((tx) => {
             // tx.executeSql('DROP TABLE feeds');
             tx.executeSql(
             'CREATE TABLE IF NOT EXISTS feeds (id INTEGER PRIMARY KEY AUTOINCREMENT, amount INT, time TEXT, type TEXT, breastside TEXT, milktype TEXT)');
-			console.log('feeds table created')
+			// console.log('feeds table created')
         });
 		db.transaction((tx) => {
 			tx.executeSql('SELECT * FROM feeds', null, 
 			  (txObj, resultSet) => {
 				setFeeds(resultSet.rows._array);
-				console.log("imported feeds")
+				// console.log("imported feeds")
 			  },
 			  (txObj, error) => console.log(error)
 			);
@@ -65,124 +64,120 @@ export default function Main({navigation}) {
 			// tx.executeSql('DROP TABLE children');
 			tx.executeSql(
 			'CREATE TABLE IF NOT EXISTS children (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, dobDay TEXT, dobMonth TEXT, dobYear TEXT, height INTEGER, weight INTEGER, gender TEXT)');
-			console.log('children table created');
+			// console.log('children table created');
 				
-			
 		  });
 		db.transaction(tx => {
 			tx.executeSql('SELECT * FROM children', null,
 			(txObj, resultSet)=>{
 				setChildren(resultSet.rows._array);
-				console.log('children added to array')
+				// console.log('children added to array')
 			},
 			(txObj, error)=> console.log(error)
 			);
 		})
+		getName();
+		// getGender();
 		
 		
-	},[]);
 		
-			
+		
+		
+	},[activeChild]);
+	// show childs history
+	const showHistory = () => {
 	
+		const reverse = [...feeds].reverse();
+		return reverse.map((feed, index) =>{
 
-	
-      const showHistory = () => {
-        
-        const reverse = [...feeds].reverse();
-        return reverse.map(feed =>{
-
-         if(feed.type == "Bottle"){
-            return(
-                <TouchableOpacity style={[styles.history, styles.shadow]} key={feed.id} onPress={()=>navigation.navigate('Feed', feed.id)}>
-                     <View style={[styles.type,{backgroundColor: ColourScheme.secondColour}]}>
-                        <Image 
-                        style={styles.typeImage}
-                        source={require('../assets/bottle.png')} 
-                        />
-                    </View>
-                    <View style={styles.historyDetails}>
-                        <View style={styles.historyDetailsRow}>
-                            <View style={styles.historyDetailsAmount}>
-                                <Text style={styles.detailsText}>{feed.time + ' '}</Text>
-                                <Text style={styles.detailsText}>{feed.amount + ' mls'}</Text>
-                            </View>
-                            <View style={styles.historyDetailsMilkType}>
-                                <Text style={styles.milkType}>{feed.milktype}</Text>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-              );
-         }else if(feed.type == "Breast"){
-            return(
-                <TouchableOpacity style={styles.history} key={feed.id} >
-                    <View style={[styles.type,{backgroundColor: ColourScheme.thirdColour}]}>
-                        <Image 
-                         style={styles.typeImage}
-                        source={require('../assets/breast.png')} 
-                        />
-                    </View>
-                    <View style={styles.historyDetails}>
-                        <View style={styles.historyDetailsRow}>
-                            <View style={styles.historyDetailsAmount}>
-                                <Text style={styles.detailsText}>{feed.time + ' '}</Text>
-                                <Text style={styles.detailsText}>{feed.amount + ' mins'}</Text>
-                            </View>
-                            <View style={styles.historyDetailsMilkType}>
-                                <Text style={styles.milkType}>{feed.breastside}</Text>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-              );
-         }else if(feed.type == "Solids"){
-            return(
-                <TouchableOpacity style={styles.history} key={feed.id} >
-                    <View style={[styles.type,{backgroundColor: ColourScheme.fourthColour}]}>
-                        <Image 
-                         style={styles.typeImage}
-                        source={require('../assets/solids.png')} 
-                        />
-                    </View>
-                    <View style={styles.historyDetails}>
-                        <View style={styles.historyDetailsRow}>
-                            <View style={{width: '100%'}}>
-                                <Text style={styles.detailsText}>{feed.time + ' '}</Text>
-                                <Text style={styles.detailsText}>{'solids'}</Text>
-                            </View>
-                            {/* <View style={styles.historyDetailsMilkType}>
-                                <Text style={styles.milkType}>{feed.breastside}</Text>
-                            </View> */}
-                        </View>
-                    </View>
-                </TouchableOpacity>
-              );
-       }
-	})}
-
-	
-
-
-
-
-
-  		const showActiveChild = () => {
-			return children.map(child=>{
-				if(child.name == activeChild){
-					return (
-						<View style={{alignItems: 'flex-end'}}>
-							<Text style={{fontSize:24, margin: 2, color: ColourScheme.text}}>{child.name}</Text>
-							<Text style={{margin: 2, color: ColourScheme.text}}>{child.dobDay}/{child.dobMonth}/{child.dobYear}</Text>
-							<Text style={{margin: 2, color: ColourScheme.text}}>Height: {child.height}cm</Text>
-							<Text style={{margin: 2, color: ColourScheme.text}}>Weight: {child.weight}kg</Text> 
+			if(feed.type == "Bottle"){
+				return(
+					<TouchableOpacity key={index} style={[styles.history, styles.shadow]} onPress={()=>navigation.navigate('Feed', feed.id)}>
+							<View style={[styles.type,{backgroundColor: ColourScheme.secondColour}]}>
+							<Image 
+							style={styles.typeImage}
+							source={require('../assets/bottle.png')} 
+							/>
 						</View>
-					)
+						<View style={styles.historyDetails}>
+							<View style={styles.historyDetailsRow}>
+								<View style={styles.historyDetailsAmount}>
+									<Text style={styles.detailsText}>{feed.time + ' '}</Text>
+									<Text style={styles.detailsText}>{feed.amount + ' mls'}</Text>
+								</View>
+								<View style={styles.historyDetailsMilkType}>
+									<Text style={styles.milkType}>{feed.milktype}</Text>
+								</View>
+							</View>
+						</View>
+					</TouchableOpacity>
+					);
+				}else if(feed.type == "Breast"){
+				return(
+					<TouchableOpacity key = {index} style={styles.history}  >
+						<View style={[styles.type,{backgroundColor: ColourScheme.thirdColour}]}>
+							<Image 
+								style={styles.typeImage}
+							source={require('../assets/breast.png')} 
+							/>
+						</View>
+						<View style={styles.historyDetails}>
+							<View style={styles.historyDetailsRow}>
+								<View style={styles.historyDetailsAmount}>
+									<Text style={styles.detailsText}>{feed.time + ' '}</Text>
+									<Text style={styles.detailsText}>{feed.amount + ' mins'}</Text>
+								</View>
+								<View style={styles.historyDetailsMilkType}>
+									<Text style={styles.milkType}>{feed.breastside}</Text>
+								</View>
+							</View>
+						</View>
+					</TouchableOpacity>
+					);
+				}else if(feed.type == "Solids"){
+				return(
+					<TouchableOpacity key ={index} style={styles.history}  >
+						<View style={[styles.type,{backgroundColor: ColourScheme.fourthColour}]}>
+							<Image 
+								style={styles.typeImage}
+							source={require('../assets/solids.png')} 
+							/>
+						</View>
+						<View style={styles.historyDetails}>
+							<View style={styles.historyDetailsRow}>
+								<View style={{width: '100%'}}>
+									<Text style={styles.detailsText}>{feed.time + ' '}</Text>
+									<Text style={styles.detailsText}>{'solids'}</Text>
+								</View>
+								{/* <View style={styles.historyDetailsMilkType}>
+									<Text style={styles.milkType}>{feed.breastside}</Text>
+								</View> */}
+							</View>
+						</View>
+					</TouchableOpacity>
+					);
+			}
+	})};
+	// show active child details
+	const showActiveChild = () => {
+		return children.map((child, index)=>{
+			if(child.name == activeChild){
+				return (
+					<View key={index} style={{alignItems: 'flex-end'}}>
+						<Text style={{fontSize:24, margin: 2, color: ColourScheme.text}}>{child.name}</Text>
+						<Text style={{margin: 2, color: ColourScheme.text}}>{child.dobDay}/{child.dobMonth}/{child.dobYear}</Text>
+						<Text style={{margin: 2, color: ColourScheme.text}}>Height: {child.height}cm</Text>
+						<Text style={{margin: 2, color: ColourScheme.text}}>Weight: {child.weight}kg</Text> 
+					</View>
+				)
 
-				}
-				
-		})
+			}
 			
-		}
+	})
+		
+	};
+
+	/// make new saved child activeChild
 
   	return (
 	
@@ -280,8 +275,8 @@ export default function Main({navigation}) {
 			<StatusBar style="auto" />
 		</View>
         
-  );
-}
+  );}
+
 
 
 const styles = StyleSheet.create({
@@ -371,8 +366,7 @@ const styles = StyleSheet.create({
   },
   timelineContainer: {
 	width: '90%',
-  borderRadius: 5,
-  
+  	borderRadius: 5,
 	backgroundColor: ColourScheme.mainColour,
 	height: '42 %',
 	marginTop: '10%',

@@ -9,12 +9,12 @@ import * as SQLite from 'expo-sqlite';
 const colorMode = 'Light'
 // boy or girl
 var gender = "Boy"
-//
-export {gender}
 
 
-export const ColourScheme = [
+export const ColourScheme = 
+    
     {
+        
         themeMode: undefined,
         themeModeBorder: undefined,
         text: undefined,
@@ -25,7 +25,8 @@ export const ColourScheme = [
         fifthColour: undefined,
         sixthColour: undefined,
     }
-]
+
+
 if(colorMode == 'Dark') {
     ColourScheme.themeMode = '#242526';
     ColourScheme.themeModeBorder = 'white';
