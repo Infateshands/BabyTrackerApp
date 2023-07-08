@@ -20,6 +20,12 @@ const db = SQLite.openDatabase('db.db');
 
 export default function Feed({route, navigation}) {
 
+	// FOR HEADER - USE ON EVERY PAGE WITH HEADER COMPONENT
+	const [activeChild, setActiveChild] = useState()
+	const headerToMain = (data) =>{
+		setActiveChild(data)
+	}
+
 	const id = route.params;
 
 	
@@ -115,7 +121,7 @@ export default function Feed({route, navigation}) {
 	return (
 		<View style={styles.container}>
 			{/* HEADER START */}
-			<Header title="Feeding"/>
+			<Header title="Feeding" active={headerToMain}/>
 			
 			{/* HEADER END */}
 

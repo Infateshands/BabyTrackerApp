@@ -74,12 +74,16 @@ export default function Header({title, active}){
 					</View>
 
 				</Modal>
-
-				<TouchableOpacity style= {styles.dotsMenu} onPress={()=>setModalVisible(true)}>
-				<Text style={styles.dots}>o</Text>
-				<Text style={styles.dots}>o</Text>
-				<Text style={styles.dots}>o</Text>
+				<View style= {styles.dotsMenuView}>
+				<TouchableOpacity style={styles.dotsButton}  onPress={()=>setModalVisible(true)}>
+				<Image
+				source={require('../assets/dotMenu.png')}
+				style={styles.img}
+				/>
 				</TouchableOpacity>
+
+				</View>
+				
 			</View>
     </View>
 
@@ -109,16 +113,24 @@ const styles = StyleSheet.create({
       fontSize: 24,
     },
     img: {
-      width: '10%',
-      height: '100%',
-      position: 'absolute',
-      top: '70%',
-      left: "2%"
-    },
-	dotsMenu: {
 		position: 'absolute',
-		right: '2%',
-		top: '85%'
+		
+		transform: [
+			{scale: 0.8}
+		]
+    },
+	dotsMenuView: {
+		position: 'absolute',
+		right: 0,
+		top: '70%',
+		width: '10%',
+		height: '100%',
+		
+	},
+	dotsButton: {
+		
+		height: '100%'
+
 	},
 	dots: {
 		color: 'black',
