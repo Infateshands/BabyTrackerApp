@@ -38,6 +38,7 @@ const storeName = async (value) => {
     }
   };
 
+
 const handleSave =()=>{
     db.transaction((tx) =>{
         tx.executeSql('INSERT INTO children (name, dobDay, dobMonth, dobYear, weight, height, gender) VALUES (?,?,?,?,?,?,?)', 
@@ -48,6 +49,7 @@ const handleSave =()=>{
     })
     storeName(name)
     storeGender(gender)
+   
     Alert.alert("Child Added!", name + " added!")
     navigation.replace('Main');
     

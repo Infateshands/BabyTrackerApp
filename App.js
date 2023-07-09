@@ -19,47 +19,14 @@ const Stack = createNativeStackNavigator();
 
 function App() {
 
-  const db = SQLite.openDatabase('db.db');
-  const [children, setChildren] = useState([]);
-  const [first, setFirst] = useState();
-  const check = () => {
-
-    if (children.length == 0){
-      setFirst(true)
-
-    }else{
-      setFirst(false)
-    }
-    console.log('run check: ' + first)
-
-  }
-
-  useEffect(()=>{
-    // child database
-  db.transaction((tx) => {
-    // tx.executeSql('DROP TABLE children');
-    tx.executeSql(
-    'CREATE TABLE IF NOT EXISTS children (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, dobDay TEXT, dobMonth TEXT, dobYear TEXT, height INTEGER, weight INTEGER, gender TEXT)');
-    console.log('children table created');
-      
-    });
-  db.transaction(tx => {
-    tx.executeSql('SELECT * FROM children', null,
-    (txObj, resultSet)=>{
-      setChildren(resultSet.rows._array);
-      // console.log('children added to array')
-    },
-    (txObj, error)=> console.log(error)
-    );
-  });
-  check();
+ 
+  
 
 
-  })
   return (
     <NavigationContainer>
       <Stack.Navigator 
-        initialRouteName={first ? 'Main' : 'Load'}
+        initialRouteName={'Main'}
         screenOptions={{
           headerShown: false
         }}

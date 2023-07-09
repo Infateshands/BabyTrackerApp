@@ -21,6 +21,7 @@ export default function Main({navigation}) {
 	const [defaultStyle, setDefaultStyle] = useState();
 	const [modalVisible, setModalVisible] = useState(false);
 	const [activeChildID, setActiveChildID] = useState();
+	const [exists, setExists] = useState();
 
 	// FUNCTIONS
 	// calculate age - update to calculate from childs DOB
@@ -71,6 +72,7 @@ export default function Main({navigation}) {
 		  console.log(e)
 		}
 	};
+
 	const storeName = async (value) => {
 		try {
 		  await AsyncStorage.setItem('activeChildName', value);
@@ -78,28 +80,31 @@ export default function Main({navigation}) {
 		} catch (e) {
 		  console.log(e);
 		}
-	  };
-	  const storeID = async (value) => {
-		try {
-		  await AsyncStorage.setItem('activeChildID', JSON.stringify(value));
-		//   console.log('stored ' +value+ ' into local storage')
-		} catch (e) {
-		  console.log(e);
-		}
-	  };
-	  const storeGender = async (value) => {
-		try {
-		  await AsyncStorage.setItem('activeChildGender', value,);
-		  
-		  console.log('stored ' +value+ ' into local storage')
-		} catch (e) {
-		  console.log(e);
-		}
-	  };
+	};
+	const storeID = async (value) => {
+	try {
+		await AsyncStorage.setItem('activeChildID', JSON.stringify(value));
+	//   console.log('stored ' +value+ ' into local storage')
+	} catch (e) {
+		console.log(e);
+	}
+	};
+	const storeGender = async (value) => {
+	try {
+		await AsyncStorage.setItem('activeChildGender', value,);
+		
+		console.log('stored ' +value+ ' into local storage')
+	} catch (e) {
+		console.log(e);
+	}
+	};
+
+	  
+
 	// run on start of app, and again whenever activeChild changes
-    useEffect(() => {
+    useEffect(  () => {
         db.transaction((tx) => {
-            // tx.executeSql('DROP TABLE feeds');
+            tx.executeSql('DROP TABLE feeds');
             tx.executeSql(
             'CREATE TABLE IF NOT EXISTS feeds (id INT, amount INT, time TEXT, type TEXT, breastside TEXT, milktype TEXT)');
 			// console.log('feeds table created')
@@ -108,7 +113,8 @@ export default function Main({navigation}) {
 			tx.executeSql('SELECT * FROM feeds', null, 
 			  (txObj, resultSet) => {
 				setFeeds(resultSet.rows._array);
-				// console.log("imported feeds")
+				
+
 			  },
 			  (txObj, error) => console.log(error)
 			);
@@ -121,21 +127,24 @@ export default function Main({navigation}) {
 			// console.log('children table created');
 				
 		  });
+		
+		
 		db.transaction(tx => {
 			tx.executeSql('SELECT * FROM children', null,
-			(txObj, resultSet)=>{
+			async (txObj, resultSet)=>{
 				setChildren(resultSet.rows._array);
-				// console.log('children added to array')
+				
+				
 			},
 			(txObj, error)=> console.log(error)
 			);
 		})
-		// if(children.length == 0){
-		// 	navigation.navigate('Load');
-		// }
+		
 		getName();
 		getGender();
 		getID();
+		
+		
 		
 	},[activeChild]);
 	// show childs history
@@ -275,11 +284,14 @@ export default function Main({navigation}) {
 	}
 	
 
+	
 	/// make new saved child activeChild
 
   	return (
-	
+		
+		
 		<View style={styles.outer}>
+			
 			{/* HEADER START */}
 
 			<View style={styles.header}>
