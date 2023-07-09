@@ -101,7 +101,7 @@ export default function Main({navigation}) {
         db.transaction((tx) => {
             // tx.executeSql('DROP TABLE feeds');
             tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS feeds (id ID, amount INT, time TEXT, type TEXT, breastside TEXT, milktype TEXT)');
+            'CREATE TABLE IF NOT EXISTS feeds (id INT, amount INT, time TEXT, type TEXT, breastside TEXT, milktype TEXT)');
 			// console.log('feeds table created')
         });
 		db.transaction((tx) => {
