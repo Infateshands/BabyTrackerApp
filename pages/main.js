@@ -96,7 +96,7 @@ export default function Main({navigation}) {
 		  console.log(e);
 		}
 	  };
-	// run on star of app, and again whenever activeChild changes
+	// run on start of app, and again whenever activeChild changes
     useEffect(() => {
         db.transaction((tx) => {
             // tx.executeSql('DROP TABLE feeds');
@@ -130,6 +130,9 @@ export default function Main({navigation}) {
 			(txObj, error)=> console.log(error)
 			);
 		})
+		// if(children.length == 0){
+		// 	navigation.navigate('Load');
+		// }
 		getName();
 		getGender();
 		getID();
