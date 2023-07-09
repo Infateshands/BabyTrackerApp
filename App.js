@@ -39,11 +39,6 @@ function App() {
     })
 
 }
-
- 
-  
-
-
   return (
     <NavigationContainer>
      

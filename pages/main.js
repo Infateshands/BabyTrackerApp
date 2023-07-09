@@ -226,32 +226,18 @@ export default function Main({navigation}) {
 	})};
 	// show active child details
 	const showActiveChild = () => {
-		if(children.length == 0){ // if array is empty (no added children), display message
-			return ( 
-				<View style={{alignItems: 'center'}}>
-						<Text style={{fontSize:24, margin: 2, color: ColourSchemeBoy.text}}>
-							Add a child
-						</Text>
-						<Text style={{fontSize:24, margin: 2, color: ColourSchemeBoy.text}}>
-							to see details
-						</Text>
+		return children.map((child, index)=>{ // loop through array
+			if(child.name == activeChild ){ // find active child in array
+				return ( // display active childs details
+					<View key={index} style={{alignItems: 'flex-end'}}>
+						<Text style={{fontSize:24, margin: 2, color: ColourSchemeBoy.text}}>{child.name}</Text>
+						<Text style={{margin: 2, color: ColourSchemeBoy.text}}>{child.dobDay}/{child.dobMonth}/{child.dobYear}</Text>
+						<Text style={{margin: 2, color: ColourSchemeBoy.text}}>Height: {child.height}cm</Text>
+						<Text style={{margin: 2, color: ColourSchemeBoy.text}}>Weight: {child.weight}kg</Text> 
 					</View>
-			)
-		} else {
-			return children.map((child, index)=>{ // loop through array
-				if(child.name == activeChild ){ // find active child in array
-					return ( // display active childs details
-						<View key={index} style={{alignItems: 'flex-end'}}>
-							<Text style={{fontSize:24, margin: 2, color: ColourSchemeBoy.text}}>{child.name}</Text>
-							<Text style={{margin: 2, color: ColourSchemeBoy.text}}>{child.dobDay}/{child.dobMonth}/{child.dobYear}</Text>
-							<Text style={{margin: 2, color: ColourSchemeBoy.text}}>Height: {child.height}cm</Text>
-							<Text style={{margin: 2, color: ColourSchemeBoy.text}}>Weight: {child.weight}kg</Text> 
-						</View>
-					)
-				}
-		})
-
-		}
+				)
+			}
+		})	
 		
 	};
 	// for menu
