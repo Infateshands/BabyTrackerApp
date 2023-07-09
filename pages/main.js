@@ -20,6 +20,7 @@ export default function Main({navigation}) {
 	const [activeChild, setActiveChild] = useState();
 	const [defaultStyle, setDefaultStyle] = useState();
 	const [modalVisible, setModalVisible] = useState(false);
+	const [activeChildID, setActiveChildID] = useState();
 
 	// FUNCTIONS
 	// calculate age - update to calculate from childs DOB
@@ -29,10 +30,7 @@ export default function Main({navigation}) {
 		return Math.floor(temp*52);
 	
 	};
-	// pass active child from header component (pick child menu/modal) to Main to use to display active child details
-	const headerToMain = (data) =>{
-		setActiveChild(data)
-	};
+	
 	// import active childs when loading new app session, remembers active user from last session
 	const getName = async () => {
 		try {
@@ -61,9 +59,29 @@ export default function Main({navigation}) {
 		  console.log(e)
 		}
 	};
+	const getID = async () => {
+		try {
+		  const value = await AsyncStorage.getItem('activeChildID');
+		  if (value !== null) {
+			setActiveChildID(value)
+			
+			// console.log(value + ' read from local storage main')
+		  }
+		} catch (e) {
+		  console.log(e)
+		}
+	};
 	const storeName = async (value) => {
 		try {
-		  await AsyncStorage.setItem('activeChildName', value,);
+		  await AsyncStorage.setItem('activeChildName', value);
+		//   console.log('stored ' +value+ ' into local storage')
+		} catch (e) {
+		  console.log(e);
+		}
+	  };
+	  const storeID = async (value) => {
+		try {
+		  await AsyncStorage.setItem('activeChildID', JSON.stringify(value));
 		//   console.log('stored ' +value+ ' into local storage')
 		} catch (e) {
 		  console.log(e);
@@ -83,7 +101,7 @@ export default function Main({navigation}) {
         db.transaction((tx) => {
             // tx.executeSql('DROP TABLE feeds');
             tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS feeds (id INTEGER PRIMARY KEY AUTOINCREMENT, amount INT, time TEXT, type TEXT, breastside TEXT, milktype TEXT)');
+            'CREATE TABLE IF NOT EXISTS feeds (id ID, amount INT, time TEXT, type TEXT, breastside TEXT, milktype TEXT)');
 			// console.log('feeds table created')
         });
 		db.transaction((tx) => {
@@ -114,6 +132,7 @@ export default function Main({navigation}) {
 		})
 		getName();
 		getGender();
+		getID();
 		
 	},[activeChild]);
 	// show childs history
@@ -121,74 +140,77 @@ export default function Main({navigation}) {
 	
 		const reverse = [...feeds].reverse();
 		return reverse.map((feed, index) =>{
+			if(feed.id == activeChildID){
+				if(feed.type == "Bottle"){
+					return(
+						<TouchableOpacity key={index} style={[styles.history, styles.shadow]} onPress={()=>navigation.navigate('Feed', feed.id)}>
+								<View style={[styles.type,{backgroundColor: ColourSchemeBoy.secondColour}]}>
+								<Image 
+								style={styles.typeImage}
+								source={require('../assets/bottle.png')} 
+								/>
+							</View>
+							<View style={styles.historyDetails}>
+								<View style={styles.historyDetailsRow}>
+									<View style={styles.historyDetailsAmount}>
+										<Text style={styles.detailsText}>{feed.time + ' '}</Text>
+										<Text style={styles.detailsText}>{feed.amount + ' mls'}</Text>
+									</View>
+									<View style={styles.historyDetailsMilkType}>
+										<Text style={styles.milkType}>{feed.milktype}</Text>
+									</View>
+								</View>
+							</View>
+						</TouchableOpacity>
+						);
+					}else if(feed.type == "Breast"){
+					return(
+						<TouchableOpacity key = {index} style={styles.history}  >
+							<View style={[styles.type,{backgroundColor: ColourSchemeBoy.thirdColour}]}>
+								<Image 
+									style={styles.typeImage}
+								source={require('../assets/breast.png')} 
+								/>
+							</View>
+							<View style={styles.historyDetails}>
+								<View style={styles.historyDetailsRow}>
+									<View style={styles.historyDetailsAmount}>
+										<Text style={styles.detailsText}>{feed.time + ' '}</Text>
+										<Text style={styles.detailsText}>{feed.amount + ' mins'}</Text>
+									</View>
+									<View style={styles.historyDetailsMilkType}>
+										<Text style={styles.milkType}>{feed.breastside}</Text>
+									</View>
+								</View>
+							</View>
+						</TouchableOpacity>
+						);
+					}else if(feed.type == "Solids"){
+					return(
+						<TouchableOpacity key ={index} style={styles.history}  >
+							<View style={[styles.type,{backgroundColor: ColourSchemeBoy.fourthColour}]}>
+								<Image 
+									style={styles.typeImage}
+								source={require('../assets/solids.png')} 
+								/>
+							</View>
+							<View style={styles.historyDetails}>
+								<View style={styles.historyDetailsRow}>
+									<View style={{width: '100%'}}>
+										<Text style={styles.detailsText}>{feed.time + ' '}</Text>
+										<Text style={styles.detailsText}>{'solids'}</Text>
+									</View>
+									{/* <View style={styles.historyDetailsMilkType}>
+										<Text style={styles.milkType}>{feed.breastside}</Text>
+									</View> */}
+								</View>
+							</View>
+						</TouchableOpacity>
+						);
+				}
 
-			if(feed.type == "Bottle"){
-				return(
-					<TouchableOpacity key={index} style={[styles.history, styles.shadow]} onPress={()=>navigation.navigate('Feed', feed.id)}>
-							<View style={[styles.type,{backgroundColor: ColourSchemeBoy.secondColour}]}>
-							<Image 
-							style={styles.typeImage}
-							source={require('../assets/bottle.png')} 
-							/>
-						</View>
-						<View style={styles.historyDetails}>
-							<View style={styles.historyDetailsRow}>
-								<View style={styles.historyDetailsAmount}>
-									<Text style={styles.detailsText}>{feed.time + ' '}</Text>
-									<Text style={styles.detailsText}>{feed.amount + ' mls'}</Text>
-								</View>
-								<View style={styles.historyDetailsMilkType}>
-									<Text style={styles.milkType}>{feed.milktype}</Text>
-								</View>
-							</View>
-						</View>
-					</TouchableOpacity>
-					);
-				}else if(feed.type == "Breast"){
-				return(
-					<TouchableOpacity key = {index} style={styles.history}  >
-						<View style={[styles.type,{backgroundColor: ColourSchemeBoy.thirdColour}]}>
-							<Image 
-								style={styles.typeImage}
-							source={require('../assets/breast.png')} 
-							/>
-						</View>
-						<View style={styles.historyDetails}>
-							<View style={styles.historyDetailsRow}>
-								<View style={styles.historyDetailsAmount}>
-									<Text style={styles.detailsText}>{feed.time + ' '}</Text>
-									<Text style={styles.detailsText}>{feed.amount + ' mins'}</Text>
-								</View>
-								<View style={styles.historyDetailsMilkType}>
-									<Text style={styles.milkType}>{feed.breastside}</Text>
-								</View>
-							</View>
-						</View>
-					</TouchableOpacity>
-					);
-				}else if(feed.type == "Solids"){
-				return(
-					<TouchableOpacity key ={index} style={styles.history}  >
-						<View style={[styles.type,{backgroundColor: ColourSchemeBoy.fourthColour}]}>
-							<Image 
-								style={styles.typeImage}
-							source={require('../assets/solids.png')} 
-							/>
-						</View>
-						<View style={styles.historyDetails}>
-							<View style={styles.historyDetailsRow}>
-								<View style={{width: '100%'}}>
-									<Text style={styles.detailsText}>{feed.time + ' '}</Text>
-									<Text style={styles.detailsText}>{'solids'}</Text>
-								</View>
-								{/* <View style={styles.historyDetailsMilkType}>
-									<Text style={styles.milkType}>{feed.breastside}</Text>
-								</View> */}
-							</View>
-						</View>
-					</TouchableOpacity>
-					);
 			}
+			
 	})};
 	// show active child details
 	const showActiveChild = () => {
@@ -205,7 +227,7 @@ export default function Main({navigation}) {
 			)
 		} else {
 			return children.map((child, index)=>{ // loop through array
-				if(child.name == activeChild){ // find active child in array
+				if(child.name == activeChild ){ // find active child in array
 					return ( // display active childs details
 						<View key={index} style={{alignItems: 'flex-end'}}>
 							<Text style={{fontSize:24, margin: 2, color: ColourSchemeBoy.text}}>{child.name}</Text>
@@ -246,9 +268,7 @@ export default function Main({navigation}) {
 		setActiveChild(kid)
 		storeName(kid.name)
 		storeGender(kid.gender)
-		
-		
-	
+		storeID(kid.id)
 	}
 	
 
@@ -292,9 +312,8 @@ export default function Main({navigation}) {
 				
 			</View>
     	</View>
-
-
 			{/* HEADER END */}
+
 			<View style={styles.container}> 
 
 				{/* NAME AND PHOTO START */}
@@ -327,7 +346,7 @@ export default function Main({navigation}) {
 				{/* MENU START */}
 				<View style = {[defaultStyle ? styles.menuArea : styles.menuAreaGirl, styles.shadow]}>
 					<View style={styles.menuItemColumn}>
-						<TouchableOpacity style={[styles.menuItem, styles.shadow]} onPress={()=>navigation.navigate('Feed')}>
+						<TouchableOpacity style={[styles.menuItem, styles.shadow]} onPress={()=>navigation.navigate('Feed', activeChildID)}>
 						<Image
 						source={require('../assets/feed.png')}
 						style={styles.pageButtonImg}

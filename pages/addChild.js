@@ -4,7 +4,7 @@ import {View, TextInput, Text, StyleSheet, Button, Alert, TouchableOpacity} from
 import * as SQLite from 'expo-sqlite';
 import { ColourSchemeBoy } from "../src/ColourScheme";
 import { Picker } from "@react-native-picker/picker";
-import { SelectedItem } from "react-native-wheel-scroll-picker";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const db = SQLite.openDatabase('db.db');
 
@@ -20,7 +20,23 @@ const [weight, setWeight] = useState(undefined);
 const [gender, setGender] = useState(undefined);
 
 
-
+const storeName = async (value) => {
+    try {
+      await AsyncStorage.setItem('activeChildName', value,);
+      console.log('stored ' +value+ ' into local storage')
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const storeGender = async (value) => {
+    try {
+      await AsyncStorage.setItem('activeChildGender', value,);
+      
+      console.log('stored ' +value+ ' into local storage')
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
 const handleSave =()=>{
     db.transaction((tx) =>{
@@ -30,8 +46,10 @@ const handleSave =()=>{
         
         
     })
+    storeName(name)
+    storeGender(gender)
     Alert.alert("Child Added!", name + " added!")
-    navigation.navigate('Main');
+    navigation.replace('Main');
     
 
 }

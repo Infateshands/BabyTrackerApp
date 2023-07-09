@@ -83,17 +83,18 @@ export default function Feed({route, navigation}) {
 
 		if(hour == undefined){
 			db.transaction((tx)=>{
-				tx.executeSql('INSERT INTO feeds (time, amount, type, breastside, milktype) VALUES (?,?,?,?,?)', [time, amount, type, breastSide, milkType])
+				tx.executeSql('INSERT INTO feeds (id, time, amount, type, breastside, milktype) VALUES (?,?,?,?,?,?)', [id, time, amount, type, breastSide, milkType])
 			})
 			Alert.alert('Feed Added', amount + ' mls of ' + milkType);
 			navigation.replace('Main');
 		}
 		else{
 			db.transaction((tx)=>{
-				tx.executeSql('INSERT INTO feeds (time, amount, type, breastside, milktype) VALUES (?,?,?,?,?)', [userTime, amount, type, breastSide, milkType])
+				tx.executeSql('INSERT INTO feeds (id, time, amount, type, breastside, milktype) VALUES (?,?,?,?,?,?)', [id, userTime, amount, type, breastSide, milkType])
 			})
-			Alert.alert('Feed Added', {amount} + ' of ' + {milkType});
+			Alert.alert('Feed Added',{amount} + ' of ' + {milkType});
 			navigation.replace('Main');
+
 		}
 	}
 
