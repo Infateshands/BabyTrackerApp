@@ -28,6 +28,14 @@ const storeName = async (value) => {
       console.log(e);
     }
   };
+  const setItem = async (value) => {
+    try {
+      await AsyncStorage.setItem('0', value,);
+      console.log('stored ' +value+ ' into local storage')
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const storeGender = async (value) => {
     try {
       await AsyncStorage.setItem('activeChildGender', value,);
@@ -49,7 +57,7 @@ const handleSave =()=>{
     })
     storeName(name)
     storeGender(gender)
-   
+    setItem('yes')
     Alert.alert("Child Added!", name + " added!")
     navigation.replace('Main');
     

@@ -3,6 +3,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import * as SQLite from 'expo-sqlite';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 
@@ -13,11 +15,30 @@ import Sleep from './pages/sleep';
 import Nappy from './pages/nappy';
 import AddChild from './pages/addChild';
 import Load from './pages/load';
-
+import LoadingScreen from './pages/LoadingScreen';
 
 const Stack = createNativeStackNavigator();
 
 function App() {
+
+  const [loading, setLoading] = useState(null);
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  const load = async () => {
+    await AsyncStorage.getItem('0').then(result => {
+      console.log('RES: ', result)
+        if (result == null) {
+           setLoading(true);
+
+        } else {
+           setLoading(false);
+        }
+    })
+
+}
 
  
   
@@ -25,23 +46,47 @@ function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator 
-        initialRouteName={'Main'}
-        screenOptions={{
-          headerShown: false
-        }}
-      >
-        <Stack.Screen name="Main" component={Main}/>
-        <Stack.Screen name="Feed" component={Feed}/>
-        <Stack.Screen name="Sleep" component={Sleep}/>
-        <Stack.Screen name="Nappy" component={Nappy}/>
-        <Stack.Screen name="AddChild" component={AddChild}/>
-        <Stack.Screen name='Load' component={Load}/>
+     
+     {loading === null ? (
+        <LoadingScreen />
+      ) : 
+        <Stack.Navigator initialRouteName={loading ? 'Load' : 'Main'}>
+         <Stack.Screen
+          name="Load"
+          component={Load}
+          options={{ headerShown: false }}
+        />
+         <Stack.Screen
+          name="Main"
+          component={Main}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+        name="AddChild"
+        component = {AddChild}
+        options={{ headerShown: false }}
+        />
+        <Stack.Screen
+        name="Feed"
+        component = {Feed}
+        options={{ headerShown: false }}
+        />
+         <Stack.Screen
+        name="Sleep"
+        component = {Sleep}
+        options={{ headerShown: false }}
+        />
+         <Stack.Screen
+        name="Nappy"
+        component = {Nappy}
+        options={{ headerShown: false }}
+        />
 
+    
+     
 
-        
-        
       </Stack.Navigator>
+    } 
     </NavigationContainer>
   );
 };
