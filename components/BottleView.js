@@ -54,15 +54,7 @@ export default function BottleView({amount, milkType}) {
 						style={{position: 'absolute', transform: [{scale: 0.75}]}}
 						/>
 						<View style={{paddingTop: 10,width: '48%', height: '65%', alignItems: 'center', justifyContent: 'center', marginTop: '20%'}}>
-							{/* <ScrollPicker
-							currentValue={pickedValue}
-							extraData={pickedValue}
-							list={bottleData}
-							onItemPress={setPickedValue}
-							labelColor="black"
-							separatorColor='rgba(0,0,0,0)'
-							selectedColor="#B6D5F3"
-							/> */}
+							t
 							<ScrollPicker
 							dataSource = {bottleData}
 							selectedIndex ={0}

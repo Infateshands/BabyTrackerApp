@@ -70,65 +70,80 @@ const handleSave =()=>{
 
     return (
         <View style={styles.container}>
-            <Text>Add Child</Text>
+         	{/* HEADER START */}
+
+			<View style={styles.header}>
+				<View style={styles.topBar}>
+					<View style={{alignSelf: 'center'}}>
+						<Text style={{fontSize: 24, fontWeight: 'bold'}}>Add Child</Text>
+					</View>
+					
+				</View>
+    		</View>
+			{/* HEADER END */}
+
+				
+      
             <Text style={styles.label}>Name: </Text>
             <TextInput 
             style={styles.input}
             onChangeText={setName}
             />
             <Text style={styles.label}>Date of Birth: </Text>
-            <View style={{flexDirection: 'row'}}>
-            <View>
-                <Text style={styles.label}>Day </Text>
+            <View style={styles.row}>
                 <TextInput 
                 style={styles.inputDate}
                 keyboardType={'numeric'}
                 onChangeText={setDay}
+				placeholder={'DD'}
                 />
-            </View>
-            <View>
-                <Text style={styles.label}>Month </Text>
                 <TextInput 
                 style={styles.inputDate}
                 keyboardType={'numeric'}
                 onChangeText={setMonth}
+				placeholder={'MM'}
+
                 />
-            </View>
-            <View>
-                <Text style={styles.label}>Year </Text>
                 <TextInput 
                 style={styles.inputDate}
                 keyboardType={'numeric'}
                 onChangeText={setYear}
+				placeholder={'YYYY'}
+
                 />
             </View>
-            </View>
+			<Text style={styles.label}>Gender: </Text>
+			<View style={styles.pickerContainer}>
+				<Picker 
+				style={styles.picker}
+				selectedValue={gender}
+				onValueChange={setGender}
+				>
+					<Picker.Item label="Choose..." enabled={false}/>
+					<Picker.Item label="Boy" value="Boy"/>
+					<Picker.Item label="Girl" value="Girl"/>
+				</Picker>
+
+			</View>
             
             
-            <Text style={styles.label}>Weight: </Text>
+            <Text style={styles.label}>Weight (kg): </Text>
             <TextInput 
             style={styles.input}
             keyboardType={'numeric'}
             onChangeText={setWeight}
             />
-            <Text style={styles.label}>Height: </Text>
+            <Text style={styles.label}>Height (cm): </Text>
             <TextInput 
             style={styles.input}
             keyboardType={'numeric'}
             onChangeText={setHeight}
             />
-            <Text style={styles.label}>Gender: </Text>
-            <Picker 
-            style={{width: '30%'}}
-            selectedItem={gender}
-            onValueChange={setGender}
-            >
-                <Picker.Item label="Choose..."/>
-                <Picker.Item label="Boy" value="Boy"/>
-                <Picker.Item label="Girl" value="Girl"/>
-            </Picker>
-            <TouchableOpacity style={{borderWidth: 1}}onPress={handleSave}>
-                <Text>Save</Text>
+            
+            
+			
+            <TouchableOpacity style={styles.button}onPress={handleSave}>
+                <Text style={styles.buttontext}>Save</Text>
             </TouchableOpacity>
 
             
@@ -140,23 +155,73 @@ const handleSave =()=>{
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 30,
-        
+		alignItems: 'center',
+
     },
+	header: {
+		width: '100%',
+		height: 70,
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: '#e6cfef',
+		marginBottom: '10%'
+
+
+	  },
+	  topBar: {
+		height: 70,
+		paddingTop: 30,
+		width: '100%',
+		backgroundColor: '#e6cfef',
+		alignItems: 'center',
+		justifyContent: 'center',
+		flexDirection: 'row',
+	  },
     label: {
+		fontSize: 18,
+		margin: 10
 
     },
     input: {
-        width: '50%',
-        height: '5%',
+        width: '70%',
+        height: 50,
         borderRadius: 5,
-        backgroundColor: ColourSchemeBoy.mainColour
+        backgroundColor: '#e6cfef',
+		textAlign: 'center'
     },
     inputDate: {
         width: 50,
         height: 50,
         borderRadius: 5,
-        backgroundColor: ColourSchemeBoy.mainColour,
-        marginRight: 10
+        backgroundColor: '#e6cfef',
+		textAlign: 'center'
     },
+	row: {
+		width: '50%',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+	},
+	picker: {
+		borderRadius: 5
+	},
+	pickerContainer: {
+		width: '60%',
+		backgroundColor: '#e6cfef',
+		borderRadius: 5,
+		
+	},
+	button: {
+		width: '50%',
+		height: 50,
+        backgroundColor: '#e6cfef',
+		borderRadius: 5,
+		alignItems: 'center',
+		justifyContent: 'center',
+		marginTop: '10%'
+
+	},
+	buttontext: {
+		fontSize: 22,
+		fontWeight: 'bold'
+	}
 })

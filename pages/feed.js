@@ -81,7 +81,7 @@ export default function Feed({route, navigation}) {
 	const addFeed = () => { 
 		var userTime = hour + ':' + mins;
 
-		if(hour == undefined){
+		if(hour === undefined || hour === ''){
 			db.transaction((tx)=>{
 				tx.executeSql('INSERT INTO feeds (id, time, amount, type, breastside, milktype) VALUES (?,?,?,?,?,?)', [id, time, amount, type, breastSide, milkType])
 			})
@@ -92,7 +92,7 @@ export default function Feed({route, navigation}) {
 			db.transaction((tx)=>{
 				tx.executeSql('INSERT INTO feeds (id, time, amount, type, breastside, milktype) VALUES (?,?,?,?,?,?)', [id, userTime, amount, type, breastSide, milkType])
 			})
-			Alert.alert('Feed Added',{amount} + ' of ' + {milkType});
+			Alert.alert('Feed Added', amount + ' of ' + milkType);
 			navigation.replace('Main');
 
 		}

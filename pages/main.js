@@ -281,38 +281,38 @@ export default function Main({navigation}) {
 			{/* HEADER START */}
 
 			<View style={styles.header}>
-			<View style={defaultStyle ? styles.topBar : styles.topBarGirl}>
-				<View style={{alignSelf: 'center'}}>
-					<Text style={{fontSize: 20}}>7 Weeks Old</Text>
-				</View>
-				
-
-				<Modal
-				transparent={true}
-				visible={modalVisible}
-				onRequestClose={() => {
-				setModalVisible(!modalVisible);
-				}}>
-					<View style={defaultStyle ? styles.modal : styles.modalGirl}>
-						{displayChildren()}
-						<TouchableOpacity onPress={handleAddNewChild}>
-							<Text style={[styles.childsName, {fontWeight: 'bold'}]}>Add Child</Text>
-						</TouchableOpacity>
+				<View style={defaultStyle ? styles.topBar : styles.topBarGirl}>
+					<View style={{alignSelf: 'center'}}>
+						<Text style={{fontSize: 20}}>7 Weeks Old</Text>
 					</View>
+					
 
-				</Modal>
-				<View style= {styles.dotsMenuView}>
-				<TouchableOpacity style={styles.dotsButton}  onPress={()=>setModalVisible(true)}>
-				<Image
-				source={require('../assets/dotMenu.png')}
-				style={styles.img}
-				/>
-				</TouchableOpacity>
+					<Modal
+					transparent={true}
+					visible={modalVisible}
+					onRequestClose={() => {
+					setModalVisible(!modalVisible);
+					}}>
+						<View style={defaultStyle ? styles.modal : styles.modalGirl}>
+							{displayChildren()}
+							<TouchableOpacity onPress={handleAddNewChild}>
+								<Text style={[styles.childsName, {fontWeight: 'bold'}]}>Add Child</Text>
+							</TouchableOpacity>
+						</View>
 
+					</Modal>
+					<View style= {styles.dotsMenuView}>
+					<TouchableOpacity style={styles.dotsButton}  onPress={()=>setModalVisible(true)}>
+					<Image
+					source={require('../assets/dotMenu.png')}
+					style={styles.img}
+					/>
+					</TouchableOpacity>
+
+					</View>
+					
 				</View>
-				
-			</View>
-    	</View>
+    		</View>
 			{/* HEADER END */}
 
 			<View style={styles.container}> 
@@ -403,6 +403,7 @@ export default function Main({navigation}) {
 
 
 			</View>
+			
 			<StatusBar style="auto" />
 		</View>
         
